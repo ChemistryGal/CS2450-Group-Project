@@ -38,7 +38,7 @@ class Control:
     def branch(self, instr):
         new_loc = int(instr[-2:])
         if new_loc not in self.storage.memory.keys():
-            print(f'Invalid memory location. Please check you file.')
+            print(f'Invalid memory location. Please check your file.')
             self.storage.set_loc(101)
         else:
             self.storage.set_loc(new_loc)
@@ -47,7 +47,7 @@ class Control:
     def branch_zero(self, instr):
         new_loc = int(instr[-2:])
         if new_loc not in self.storage.memory.keys():
-            print(f'Invalid memory location. Please check you file.')
+            print(f'Invalid memory location. Please check your file.')
             self.storage.set_loc(101)
         elif self.storage.accumulator == 0:
             self.storage.set_loc(new_loc)
@@ -55,7 +55,7 @@ class Control:
     def branch_neg(self, instr):
         new_loc = int(instr[-2:])
         if new_loc not in self.storage.memory.keys():
-            print(f'Invalid memory location. Please check you file.')
+            print(f'Invalid memory location. Please check your file.')
             self.storage.set_loc(101)
         elif self.storage.accumulator < 0:
             self.storage.set_loc(new_loc)
