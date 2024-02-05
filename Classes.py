@@ -60,41 +60,41 @@ class Control:
         elif self.storage.accumulator < 0:
             self.storage.set_loc(new_loc)
 
-    def halt(self):
+    def halt(self, instr):
         self.storage.loc = 101
 
 class IO:
     def __init__(self,storage):
         self.storage = storage
 
-    def read(self):
-        pass
+    def read(self, instr):
+        print("read", instr)
 
-    def write(self):
-        pass
+    def write(self, instr):
+        print("write", instr)
 
 class LS:
     def __init__(self,storage):
         self.storage = storage
 
-    def load(self):
-        pass
+    def load(self, instr):
+        print("load", instr)
 
-    def store(self):
-        pass
+    def store(self, instr):
+        print("store", instr)
 
 class Arithmetic:
     def __init__(self,storage):
         self.storage = storage
 
-    def add(self):
-        pass
+    def add(self, instr):
+        print("add", instr)
 
-    def sub(self):
-        pass
+    def sub(self, instr):
+        print("sub", instr)
 
-    def div(self):
-        pass
+    def div(self, instr):
+        print("div", instr)
 
-    def mult(self):
-        pass
+    def mult(self, instr):
+        print("mult", instr)

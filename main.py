@@ -21,7 +21,7 @@ def main():
                 ls_obj = LS(storage)
                 if instr[1:3] == "20":
                     ls_obj.load(instr)
-                if instr[1:3] == "41":
+                if instr[1:3] == "21":
                     ls_obj.store(instr)
             if instr[1:3] in arith:
                 arith_obj = Arithmetic(storage)
@@ -49,5 +49,6 @@ def main():
                     control_obj.branch_zero(instr)
                 if instr[1:3] == "43":
                     control_obj.halt(instr)
+            storage.loc += 1
     
 main()
