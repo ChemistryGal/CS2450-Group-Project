@@ -17,7 +17,7 @@ class Storage:
         with open(file, "r") as f:
             loc = 0
             for line in f:
-                self.memory[loc] = line
+                self.memory[loc] = line.strip()
                 loc += 1
         self.loc = 0
 
@@ -38,16 +38,15 @@ class Control:
     def branch(self, instr):
         new_loc = int(instr[-2:])
         if new_loc not in self.storage.memory.keys():
-            print(f'Invalid memory location. Please check you file.')
+            print(f'Invalid memory location. Please check your file.')
             self.storage.set_loc(101)
         else:
             self.storage.set_loc(new_loc)
-        
     
     def branch_zero(self, instr):
         new_loc = int(instr[-2:])
         if new_loc not in self.storage.memory.keys():
-            print(f'Invalid memory location. Please check you file.')
+            print(f'Invalid memory location. Please check your file.')
             self.storage.set_loc(101)
         elif self.storage.accumulator == 0:
             self.storage.set_loc(new_loc)
@@ -55,7 +54,7 @@ class Control:
     def branch_neg(self, instr):
         new_loc = int(instr[-2:])
         if new_loc not in self.storage.memory.keys():
-            print(f'Invalid memory location. Please check you file.')
+            print(f'Invalid memory location. Please check your file.')
             self.storage.set_loc(101)
         elif self.storage.accumulator < 0:
             self.storage.set_loc(new_loc)
@@ -74,17 +73,33 @@ class IO:
         print("write", instr)
 
 class LS:
-    def __init__(self,storage):
+    def __init__(self,storage: Storage):
         self.storage = storage
 
-    def load(self, instr):
-        print("load", instr)
+    def load(self, location:str):
+        int_location = int(location)
+        self.storage.accumulator = int(self.storage.memory[int_location])
+        # print(f"Loaded accumulator with value at memory location: {location} accumulator value: {self.storage.accumulator}")
 
-    def store(self, instr):
-        print("store", instr)
+    def store(self, location:str):
+        int_location = int(location)
+        if self.storage.accumulator == 0:
+            self.storage.memory[int_location] = "+0000"
+        else:
+            self.storage.memory[int_location] = str(self.storage.accumulator)
+        # print(f"Stored {self.storage.accumulator} at location {location}")
 
 class Arithmetic:
-    def __init__(self,storage):
+    """integer arithmetic
+    
+    We want to keep the strings subscriptable so that the command line interface will work.
+    This makes arithmetic more complicated. The load function casts values into integers.
+    The accumulator can only store integers. Cast strings into integers in order to implement
+    these functions.
+    
+    - Nick
+    """
+    def __init__(self,storage:Storage):
         self.storage = storage
 
     def add(self, instr):
@@ -96,5 +111,8 @@ class Arithmetic:
     def div(self, instr):
         print("div", instr)
 
-    def mult(self, instr):
-        print("mult", instr)
+    def mult(self, location:str):
+        int_location = int(location)
+        other = int(self.storage.memory[int_location])
+        self.storage.accumulator *= other
+        # print(f"Multiplied accumulator value: {self.storage.accumulator}")

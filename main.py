@@ -20,9 +20,9 @@ def main():
             if instr[1:3] in ls:
                 ls_obj = LS(storage)
                 if instr[1:3] == "20":
-                    ls_obj.load(instr)
+                    ls_obj.load(instr[3:5])
                 if instr[1:3] == "21":
-                    ls_obj.store(instr)
+                    ls_obj.store(instr[3:5])
             if instr[1:3] in arith:
                 arith_obj = Arithmetic(storage)
                 if instr[1:3] == "30":
@@ -32,7 +32,7 @@ def main():
                 if instr[1:3] == "32":
                     arith_obj.div(instr)
                 if instr[1:3] == "33":
-                    arith_obj.mult(instr)
+                    arith_obj.mult(instr[3:5])
             if instr[1:3] in io:
                 io_obj = IO(storage)
                 if instr[1:3] == "10":
