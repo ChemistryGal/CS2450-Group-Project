@@ -2,11 +2,11 @@ from Classes import *
 
 def main():
     # Get user input
-    file = input("Hello! Welcome to UVUSim. Please type the name of your txt file: ")
+    file = input("Hello! Welcome to UVSim. Please type the name of your txt file: ")
     #Create storage obj and load data into memory
     storage = Storage()
     storage.load_memory(file)
-    # Validate the memory that was loaded. Throw an error if there is an incorrect instruction throw a error meesage to the console.
+    # Validate the memory that was loaded. Throw an error if there is an incorrect instruction - throw an error message to the console.
     if type(storage.validate_memory()) == list:
         bad = storage.validate_memory()
         print(f'There seems to be an issue with the following instruction/s in your file: {bad}')
