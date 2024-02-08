@@ -26,11 +26,11 @@ def main():
             if instr[1:3] in arith:
                 arith_obj = Arithmetic(storage)
                 if instr[1:3] == "30":
-                    arith_obj.add(instr)
+                    arith_obj.add(instr[3:5])
                 if instr[1:3] == "31":
-                    arith_obj.sub(instr)
+                    arith_obj.sub(instr[3:5])
                 if instr[1:3] == "32":
-                    arith_obj.div(instr)
+                    arith_obj.div(instr[3:5])
                 if instr[1:3] == "33":
                     arith_obj.mult(instr[3:5])
             if instr[1:3] in io:
