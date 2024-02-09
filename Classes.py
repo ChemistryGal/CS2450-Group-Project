@@ -102,14 +102,23 @@ class Arithmetic:
     def __init__(self,storage:Storage):
         self.storage = storage
 
-    def add(self, instr):
-        print("add", instr)
-
-    def sub(self, instr):
-        print("sub", instr)
-
-    def div(self, instr):
-        print("div", instr)
+def add(self, location:str):
+        int_location = int(location)
+        other = int(self.storage.memory[int_location])
+        self.storage.accumulator += other
+        #print(f"Added accumulator value: {self.storage.accumulator}")
+        
+    def sub(self, location:str):
+        int_location = int(location)
+        other = int(self.storage.memory[int_location])
+        self.storage.accumulator -= other
+        #print(f"Subtracted accumulator value: {self.storage.accumulator}")
+        
+    def div(self, location:str):
+        int_location = int(location)
+        other = int(self.storage.memory[int_location])
+        self.storage.accumulator /= other
+        #print(f"Divided accumulator value: {self.storage.accumulator}")
 
     def mult(self, location:str):
         int_location = int(location)
