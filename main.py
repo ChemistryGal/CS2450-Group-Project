@@ -1,22 +1,25 @@
 from Classes import *
 
+
 def main():
     # Get user input
-    file = input("Hello! Welcome to UVSim. Please type the name of your txt file: ")
-    #Create storage obj and load data into memory
+    file = input(
+        "Hello! Welcome to UVSim. Please type the name of your txt file: ")
+    # Create storage obj and load data into memory
     storage = Storage()
     storage.load_memory(file)
     # Validate the memory that was loaded. Throw an error if there is an incorrect instruction - throw an error message to the console.
     if type(storage.validate_memory()) == list:
         bad = storage.validate_memory()
-        print(f'There seems to be an issue with the following instruction/s in your file: {bad}')
+        print(
+            f'There seems to be an issue with the following instruction/s in your file: {bad}')
     else:
         while storage.loc <= len(storage.memory):
             instr = storage.memory[storage.loc]
-            control = ["40","41","42","43"]
-            ls = ["20","21"]
-            arith = ["30", "31", "32","33"]
-            io = ["10","11"]
+            control = ["40", "41", "42", "43"]
+            ls = ["20", "21"]
+            arith = ["30", "31", "32", "33"]
+            io = ["10", "11"]
             if instr[1:3] in ls:
                 ls_obj = LS(storage)
                 if instr[1:3] == "20":
@@ -48,7 +51,8 @@ def main():
                 if instr[1:3] == "42":
                     control_obj.branch_zero(instr)
                 if instr[1:3] == "43":
-                    control_obj.halt(instr)
+                    control_obj.halt()
             storage.loc += 1
-    
+
+
 main()
