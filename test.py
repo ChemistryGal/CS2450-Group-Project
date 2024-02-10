@@ -91,6 +91,54 @@ def test_branch_zero_3():
     assert storage.loc == 101
 
 
+def test_add_1():
+    storage = Storage()
+    storage.memory = {0:"1001", 1:"1002", 2:"4003", 3:"0003"}
+    storage.accumulator = 13
+    arithmetic = Arithmetic(storage)
+    arithmetic.add("01")
+    assert storage.accumulator == 15
+
+def test_add_2():
+    storage = Storage()
+    storage.memory = {0:"1001", 1:"1002", 2:"4003", 3:"0003"}
+    storage.accumulator = 5
+    arithmetic = Arithmetic(storage)
+    arithmetic.add("00")
+    assert storage.accumulator == 6
+
+def test_sub_1():
+    storage = Storage()
+    storage.memory = {0:"1001", 1:"1002", 2:"4003", 3:"0003"}
+    storage.accumulator = 23
+    arithmetic = Arithmetic(storage)
+    arithmetic.sub("03")
+    assert storage.accumulator == 20
+
+def test_sub_2():
+    storage = Storage()
+    storage.memory = {0:"1001", 1:"1002", 2:"4003", 3:"0003"}
+    storage.accumulator = 9
+    arithmetic = Arithmetic(storage)
+    arithmetic.sub("02")
+    assert storage.accumulator == 6
+
+def test_divide_1():
+    storage = Storage()
+    storage.memory = {0:"1001", 1:"1002", 2:"4003", 3:"0003"}
+    storage.accumulator = 30
+    arithmetic = Arithmetic(storage)
+    arithmetic.div("01")
+    assert storage.accumulator == 15
+
+def test_divide_2():
+    storage = Storage()
+    storage.memory = {0:"1001", 1:"1002", 2:"4003", 3:"0003"}
+    storage.accumulator = 12
+    arithmetic = Arithmetic(storage)
+    arithmetic.div("00")
+    assert storage.accumulator == 12
+
 def test_multiply_1():
     storage = Storage()
     storage.memory = {0: "1001", 1: "1002", 2: "4003", 3: "0003"}
