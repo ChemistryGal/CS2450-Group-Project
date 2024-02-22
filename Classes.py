@@ -36,13 +36,13 @@ class Storage:
         self.memory[mem_key] = val
 
 
-    # Returns the value at the specified location in memory (mem_key)
-    def read_memory(self, mem_key):
-        return self.memory[mem_key]
+    # # Returns the value at the specified location in memory (mem_key)
+    # def read_memory(self, mem_key):
+    #     return self.memory[mem_key]
 
-    # Writes the value to the specified location in memory (mem_key)
-    def write_memory(self, mem_key, val):
-        self.memory[mem_key] = val
+    # # Writes the value to the specified location in memory (mem_key)
+    # def write_memory(self, mem_key, val):
+    #     self.memory[mem_key] = val
 
 
 class Control:
@@ -169,33 +169,34 @@ class Arithmetic:
             self.storage.accumulator = result
 
     def add(self, instr: list):
-        int_location = instr[2]
-        other = int(self.storage.memory[int_location])
+        other = instr[2]
+        # other = int(self.storage.memory[int_location])
         accu = self.storage.accumulator
         result = accu + other
         self.check_overflow(result)
         # print(f"Added accumulator value: {self.storage.accumulator}")
 
     def sub(self, instr: list):
-        int_location = instr[2]
+        other = instr[2]
         accu = self.storage.accumulator
-        other = int(self.storage.memory[int_location])
+        # other = int(self.storage.memory[int_location])
         result = accu - other
         self.check_overflow(result)
         # print(f"Subtracted accumulator value: {self.storage.accumulator}")
 
     def div(self, instr: list):
-        int_location = instr[2]
+        other = instr[2]
         accu = self.storage.accumulator
-        other = int(self.storage.memory[int_location])
+        #  = int(self.storage.memory[int_location])
         result = accu/other
         self.check_overflow(result)
         # print(f"Divided accumulator value: {self.storage.accumulator}")
 
     def mult(self, instr: list):
-        int_location = instr[2]
+        other = instr[2]
         accu = self.storage.accumulator
-        other = int(self.storage.memory[int_location])
+        # other = int(self.storage.memory[int_location])
         result = accu*other
+        print(result)
         self.check_overflow(result)
         # print(f"Multiplied accumulator value: {self.storage.accumulator}")

@@ -93,7 +93,7 @@ def test_branch_zero_3():
 
 def test_add_1():
     storage = Storage()
-    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
+    storage.memory = {0:["+",0,1], 1:["+",10,2], 2:["+",40,3], 3: ["+",0,0]}
     storage.accumulator = 13
     arithmetic = Arithmetic(storage)
     arithmetic.add(['+',0,3])
@@ -101,7 +101,7 @@ def test_add_1():
 
 def test_add_2():
     storage = Storage()
-    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
+    storage.memory = {0:["+",0,1], 1:["+",10,2], 2:["+",40,3], 3: ["+",0,0]}
     storage.accumulator = 13
     arithmetic = Arithmetic(storage)
     arithmetic.add(['+',0,17])
@@ -109,60 +109,60 @@ def test_add_2():
 
 def test_sub_1():
     storage = Storage()
-    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
+    storage.memory = {0:["+",0,1], 1:["+",10,2], 2:["+",40,3], 3: ["+",0,0]}
     storage.accumulator = 23
     arithmetic = Arithmetic(storage)
-    arithmetic.sub(['+',0,3])
+    arithmetic.sub(storage.memory[2])
     assert storage.accumulator == 20
 
 def test_sub_2():
     storage = Storage()
-    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
+    storage.memory = {0:["+",0,1], 1:["+",10,2], 2:["+",40,3], 3: ["+",0,0]}
     storage.accumulator = 9
     arithmetic = Arithmetic(storage)
-    arithmetic.sub(['+',0,3])
+    arithmetic.sub(storage.memory[2])
     assert storage.accumulator == 6
 
 def test_divide_1():
     storage = Storage()
-    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
+    storage.memory = {0:["+",0,1], 1:["+",10,2], 2:["+",40,3], 3: ["+",0,0]}
     storage.accumulator = 30
     arithmetic = Arithmetic(storage)
-    arithmetic.div(['+',0,2])
+    arithmetic.div(storage.memory[1])
     assert storage.accumulator == 15
 
 def test_divide_2():
     storage = Storage()
-    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
+    storage.memory = {0:["+",0,1], 1:["+",10,2], 2:["+",40,3], 3: ["+",0,0]}
     storage.accumulator = 12
     arithmetic = Arithmetic(storage)
-    arithmetic.div(['+',0,1])
+    arithmetic.div(storage.memory[0])
     assert storage.accumulator == 12
 
 def test_multiply_1():
     storage = Storage()
-    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
+    storage.memory = {0:["+",10,1], 1:["+",10,2], 2:["+",40,3], 3: ["+",0,0]}
     storage.accumulator = 10
     arithmetic = Arithmetic(storage)
-    arithmetic.mult(['+',0,3])
+    arithmetic.mult(storage.memory[2])
     assert storage.accumulator == 30
 
 
 def test_multiply_2():
     storage = Storage()
-    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
+    storage.memory = {0:["+",10,1], 1:["+",10,2], 2:["+",40,3], 3: ["+",0,0]}
     storage.accumulator = 4
     arithmetic = Arithmetic(storage)
-    arithmetic.mult(['+',0,2])
+    arithmetic.mult(storage.memory[1])
     assert storage.accumulator == 8
 
 
 def test_multiply_3():
     storage = Storage()
-    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
+    storage.memory = {0:["+",10,1], 1:["+",10,2], 2:["+",40,3], 3: ["+",0,0]}
     storage.accumulator = 25
     arithmetic = Arithmetic(storage)
-    arithmetic.mult(['+',0,2])
+    arithmetic.mult(storage.memory[1])
     assert storage.accumulator == 50
 
 
@@ -226,7 +226,6 @@ def test_load_2():
         elif word == 3:
             loader.load(to_load[word])
             assert storage.accumulator == 4
-
 
 def test_load_3():
     storage = Storage()
