@@ -1,15 +1,39 @@
-Hello! Welcome to uvSim! This is a virtual maching for interpreting BasicML.
-To run this program open a terminal and type "python main.py". After that the system will
-ask you to input your file name. Here is small example of what you want your file to look like.
-Make sure your file includes a halt (4300). 
-Sample input file:
-    +1007
-    +1008
-    +2007
-    +2008
-    +2109
-    +1109
-    +4300
-    +0000
-    +0000
-    +0000
+Certainly! Here's the content formatted using Markdown for a GitHub README:
+
+# uvSim: Virtual Machine for Interpreting BasicML
+
+## Introduction
+
+Hello and welcome to uvSim! uvSim is a virtual machine designed for interpreting BasicML.
+
+## Getting Started
+
+To run this program, follow these simple steps:
+
+1. Open a terminal.
+2. Type the following command:
+
+    ```bash
+    python main.py
+    ```
+
+3. The system will prompt you to input your file name.
+
+## Example Input File
+
+Here's a small example of what your input file should look like. Ensure that your file includes a halt instruction (4300).
+
+```assembly
++1007
++1008
++2007
++2008
++2109
++1109
++4300
++0000
++0000
++0000
+```
+
+Feel free to customize the content and styling to better suit your project's documentation on GitHub.
