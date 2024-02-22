@@ -1,5 +1,3 @@
-Certainly! Here's the content formatted using Markdown for a GitHub README:
-
 # uvSim: Virtual Machine for Interpreting BasicML
 
 ## Introduction
@@ -36,4 +34,3 @@ Here's a small example of what your input file should look like. Ensure that you
 +0000
 ```
 
-Feel free to customize the content and styling to better suit your project's documentation on GitHub.
