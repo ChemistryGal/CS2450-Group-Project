@@ -5,7 +5,6 @@ def check_valid_instruction(instruction):
         return True
     return False
 
-
 class Storage:
     def __init__(self):
         # Dictionary might be best to store each address and register.
@@ -27,9 +26,6 @@ class Storage:
                     self.memory[loc] = clean
                 loc += 1
         self.loc = 0
-
-    def validate_memory(self):
-        pass
 
     # Returns the value at the specified location in memory (mem_key)
     def read_memory(self, mem_key):
@@ -128,7 +124,10 @@ class LS:
         int_location = instr[2]
         if int_location in self.storage.memory.keys():
             if type(self.storage.memory[int_location]) == list:
-                self.storage.accumulator = int(str(self.storage.memory[int_location][1])+str(self.storage.memory[int_location][2]))
+                if instr[0] == '+':
+                    self.storage.accumulator = int(str(self.storage.memory[int_location][1])+str(self.storage.memory[int_location][2]))
+                else:
+                    self.storage.accumulator = int('-'+str(self.storage.memory[int_location][1])+str(self.storage.memory[int_location][2]))
             else:
                 self.storage.accumulator =int(self.storage.memory[int_location])
         else:
@@ -181,7 +180,7 @@ class Arithmetic:
         int_location = instr[2]
         accu = self.storage.accumulator
         other = int(self.storage.memory[int_location])
-        result = other - accu
+        result = accu - other
         self.check_overflow(result)
         # print(f"Subtracted accumulator value: {self.storage.accumulator}")
 
