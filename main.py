@@ -9,13 +9,12 @@ def main():
     storage = Storage()
     storage.load_memory(file)
     # Validate the memory that was loaded. Throw an error if there is an incorrect instruction - throw an error message to the console.
-
+    control = [40, 41, 42, 43]
+    ls = [20, 21]
+    arith = [30, 31, 32, 33]
+    io = [10, 11]
     while storage.loc <= len(storage.memory):
         instr = storage.memory[storage.loc]
-        control = [40, 41, 42, 43]
-        ls = [20, 21]
-        arith = [30, 31, 32, 33]
-        io = [10, 11]
         if instr[1] in ls:
             ls_obj = LS(storage)
             if instr[1] == 20:

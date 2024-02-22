@@ -93,82 +93,82 @@ def test_branch_zero_3():
 
 def test_add_1():
     storage = Storage()
-    storage.memory = {0:"1001", 1:"1002", 2:"4003", 3:"0003"}
+    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
     storage.accumulator = 13
     arithmetic = Arithmetic(storage)
-    arithmetic.add("01")
-    assert storage.accumulator == 15
+    arithmetic.add(['+',0,3])
+    assert storage.accumulator == 16
 
 def test_add_2():
     storage = Storage()
-    storage.memory = {0:"1001", 1:"1002", 2:"4003", 3:"0003"}
-    storage.accumulator = 5
+    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
+    storage.accumulator = 13
     arithmetic = Arithmetic(storage)
-    arithmetic.add("00")
-    assert storage.accumulator == 6
+    arithmetic.add(['+',0,17])
+    assert storage.accumulator == 30
 
 def test_sub_1():
     storage = Storage()
-    storage.memory = {0:"1001", 1:"1002", 2:"4003", 3:"0003"}
+    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
     storage.accumulator = 23
     arithmetic = Arithmetic(storage)
-    arithmetic.sub("03")
+    arithmetic.sub(['+',0,3])
     assert storage.accumulator == 20
 
 def test_sub_2():
     storage = Storage()
-    storage.memory = {0:"1001", 1:"1002", 2:"4003", 3:"0003"}
+    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
     storage.accumulator = 9
     arithmetic = Arithmetic(storage)
-    arithmetic.sub("02")
+    arithmetic.sub(['+',0,3])
     assert storage.accumulator == 6
 
 def test_divide_1():
     storage = Storage()
-    storage.memory = {0:"1001", 1:"1002", 2:"4003", 3:"0003"}
+    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
     storage.accumulator = 30
     arithmetic = Arithmetic(storage)
-    arithmetic.div("01")
+    arithmetic.div(['+',0,2])
     assert storage.accumulator == 15
 
 def test_divide_2():
     storage = Storage()
-    storage.memory = {0:"1001", 1:"1002", 2:"4003", 3:"0003"}
+    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
     storage.accumulator = 12
     arithmetic = Arithmetic(storage)
-    arithmetic.div("00")
+    arithmetic.div(['+',0,1])
     assert storage.accumulator == 12
 
 def test_multiply_1():
     storage = Storage()
-    storage.memory = {0: "1001", 1: "1002", 2: "4003", 3: "0003"}
+    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
     storage.accumulator = 10
     arithmetic = Arithmetic(storage)
-    arithmetic.mult("03")
+    arithmetic.mult(['+',0,3])
     assert storage.accumulator == 30
 
 
 def test_multiply_2():
     storage = Storage()
-    storage.memory = {0: "10", 1: "0002", 2: "4003", 3: "0003"}
+    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
     storage.accumulator = 4
     arithmetic = Arithmetic(storage)
-    arithmetic.mult("01")
+    arithmetic.mult(['+',0,2])
     assert storage.accumulator == 8
 
 
 def test_multiply_3():
     storage = Storage()
-    storage.memory = {0: "1001", 1: "0002", 2: "4003", 3: "0003"}
+    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
     storage.accumulator = 25
     arithmetic = Arithmetic(storage)
-    arithmetic.mult("01")
+    arithmetic.mult(['+',0,2])
     assert storage.accumulator == 50
 
 
 def test_load_1():
     storage = Storage()
-    storage.memory = {0: "1001", 1: "0002", 2: "4003", 3: "0003"}
+    storage.memory = {0: 1001, 1: 1002, 2: 4003, 3: 0000}
     loader = LS(storage)
     to_load = ["00", "01", "02", "03"]
     for word in range(len(to_load)):
