@@ -40,6 +40,15 @@ class Storage:
         self.memory[mem_key] = val
 
 
+    # Returns the value at the specified location in memory (mem_key)
+    def read_memory(self, mem_key):
+        return self.memory[mem_key]
+
+    # Writes the value to the specified location in memory (mem_key)
+    def write_memory(self, mem_key, val):
+        self.memory[mem_key] = val
+
+
 class Control:
     def __init__(self, storage :Storage):
         self.storage = storage
