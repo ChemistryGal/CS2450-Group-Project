@@ -1,7 +1,25 @@
-from BusLogic import *
+from Storage import Storage
+
+class ArithLogic:
+    def check_overflow(self, result):
+        if len(str(result)) > 4 and result>0:
+            temp = str(result)[:4]
+            self.storage.accumulator = int(temp)
+        elif len(str(result)) > 4 and result<0:
+            temp = str(result)[:5]
+            self.storage.accumulator = int(temp)
+        else:
+            self.storage.accumulator = result
+
+def check_valid_instruction(instruction):
+    valid_ins = [10, 11, 20, 21, 30,
+                 31, 32, 33, 40, 41, 42, 43]
+    if instruction in valid_ins:
+        return True
+    return False
 
 class Control:
-    def __init__(self, storage :Storage):
+    def __init__(self, storage: Storage):
         self.storage = storage
 
     # This function will branch to a new memory location
@@ -62,11 +80,14 @@ class IO:
     def write(self, instr):
         # prints the returned value of the read_memory method
         item = self.storage.read_memory(instr[2])
+        res_str = ""
         if type(item) == list:
             res_str = ''.join(str(item) for item in item)
         else:
             res_str = item
         print(res_str)
+        return res_str
+
 
 
 class LS:
