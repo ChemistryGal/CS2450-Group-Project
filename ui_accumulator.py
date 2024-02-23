@@ -1,10 +1,11 @@
 import tkinter as tk
 from tkinter import ttk, filedialog
+from BusLogic import UVSimulator
 
 LARGEFONT = ("Verdana", 20)
 
 class tkinterApp(tk.Tk):
-    def __init__(self, UVSim, *args, **kwargs):
+    def __init__(self, UVSim:UVSimulator, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         self.title("UVsim")
         self.minsize(width=300, height=250)
@@ -15,7 +16,7 @@ class tkinterApp(tk.Tk):
 
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
-
+        self.UVsim = UVSim
         self.frames = {}
         self.file_path = None
         self.input_command = None
@@ -50,7 +51,8 @@ class StartPage(tk.Frame):
 
         if file_path:
             controller.file_path = file_path
-            controller.frames[AccumulatorView].update_data(controller)
+            print(controller)
+            controller.frames[AccumulatorView].update_input(controller)
             controller.show_frame(AccumulatorView)
 
 class AccumulatorView(tk.Frame):
@@ -59,6 +61,7 @@ class AccumulatorView(tk.Frame):
         self.grid_columnconfigure(0, weight=1)
         self.grid_rowconfigure(0, weight=1)
 
+        # Input side
         self.input_label = ttk.Label(self, text="Input", font=LARGEFONT)
         self.input_label.grid(row=0, column=0, padx=10, pady=10)
 
@@ -66,41 +69,48 @@ class AccumulatorView(tk.Frame):
         self.input_entry = ttk.Entry(self)
         self.input_entry.grid(row=1, column=0, padx=10, pady=10)
 
+        # Button to run the loaded file
+        run_button = ttk.Button(self, text="Run File", command=self.run_file(controller))
+        run_button.grid(row=2, column=0, padx=10, pady=10)
+
+        # Load new file button
+        ld_file = ttk.Button(self, text="Load New File", command=lambda: controller.frames[StartPage].load_file(controller))
+        ld_file.grid(row=3, column=0, padx=10, pady=10)
+
+        # Output side
         self.output_label = ttk.Label(self, text="Output", font=LARGEFONT)
-        self.output_label.grid(row=2, column=0, padx=10, pady=10)
+        self.output_label.grid(row=0, column=1, padx=10, pady=10)
 
         # Label for displaying output text
         self.output_text = ttk.Label(self, text="", font=("Helvetica", 16))
-        self.output_text.grid(row=3, column=0, padx=10, pady=10)
+        self.output_text.grid(row=1, column=1, padx=10, pady=10)
 
-        # Button to run the loaded file
-        run_button = ttk.Button(self, text="Run File", command=self.run_file)
-        run_button.grid(row=4, column=0, padx=10, pady=10)
-        
-        # Button to run the loaded file
-        ld_file = ttk.Button(self, text="Load New File", command= lambda: controller.frames[StartPage].load_file(controller))
-        ld_file.grid(row=5, column=0, padx=10, pady=10)
         # Bind the <Return> key event to the run_file function
-        # Bind the <Return> key event to the run_file function
-        self.input_entry.bind("<Return>", lambda event: self.run_file(controller, self.get_input()))
+        self.input_entry.bind("<Return>", lambda event: self.run_file(controller))
 
-    def run_file(self, controller, input_value, event=None):
+    def run_file(self, controller: tkinterApp, event=None):
         # Placeholder function to notify the user
-        self.output_text.config(text=f"Waiting for input... Input Value: {input_value}")
-        controller.input_command = input_value
+        print(controller.file_path)
+        result = controller.UVsim.load_program(controller.file_path)
+        print(result)
+        if result == 1:
+            controller.show_frame(StartPage)
 
-        # You can add your file execution logic here using the controller.file_path
-        # For example, you might want to read the content of the file and process it
-        # You can update the output_text label accordingly
-        
-    def get_input(self):
+    def get_input(self, controller):
         # Get the value from the input entry
         return self.input_entry.get()
-    
-    def update_data(self, controller):    
-        # Update the labels with new data
+
+    def update_input(self, controller):
         self.input_label.config(text=controller.file_path)
+
+    def update_output(self, controller):
         self.output_label.config(text=controller.file_path)
+
+
+    # def update_data(self, controller):    
+    #     # Update the labels with new data
+    #     self.input_label.config(text=controller.file_path)
+    #     self.output_label.config(text=controller.file_path)
         
 # Driver Code - move and import these into the main function to run the application.
 # app = tkinterApp()

@@ -1,7 +1,5 @@
-from ui_accumulator import tkinterApp
 from Storage import Storage
 from Classes import *
-
 
 class UVSimulator:
     def __init__(self):
@@ -25,9 +23,10 @@ class UVSimulator:
         self.shared_output = None
         
     def load_program(self, file):
-        while self.app.file_path is None:
-            pass
+        if file is None:
+            return 1
         self.storage.load_memory(file)
+        return 0
 
     def execute_instruction(self, instr):
         opcode = instr[1]
