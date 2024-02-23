@@ -211,37 +211,37 @@ def test_read_1(monkeypatch):
     # Simulate user input
     monkeypatch.setattr('builtins.input', lambda _: '1234')
     storage = Storage()
-    storage.memory = {0: 1001, 1: 0000}
+    storage.memory = {0: ['+',10,1], 1: ['+',0,0]}
     io = IO(storage)
     instr = ['+',10,1]
     io.read(instr)
     # Assert that the input value is stored in the correct memory location
     # Adjust this according to how you handle values in memory
     print(storage.memory)
-    assert storage.memory[instr[2]] == 1234
+    assert storage.memory[instr[2]] == '1234'
 
 
 def test_read_2(monkeypatch):
     # Simulate user input
-    input = '-4321'
+    input = '4321'
     monkeypatch.setattr('builtins.input', lambda _: input)
     storage = Storage()
+    storage.memory = {0: ['+',10,1], 1: ['+',0,0]}
     io = IO(storage)
-    mem_key = '01'  # Example memory location
-    instr = "+10" + mem_key
+    instr = ['+',10,1]
     io.read(instr)
     # Assert that the input value is stored in the correct memory location
     # Adjust this according to how you handle values in memory
     print(storage.memory)
-    assert storage.memory[int(mem_key)] == -4321
+    assert storage.memory[instr[2]] == '4321'
 
 
 def test_write_1(capfd):
     storage = Storage()
     io = IO(storage)
     mem_key = '01'
-    instr = "+11" + mem_key
-    storage.memory[int(mem_key)] = 1234  # Pre-set a value in memory
+    instr = ['+',10,1]
+    storage.memory[instr[2]] = 1234  # Pre-set a value in memory
     io.write(instr)
     out, _ = capfd.readouterr()
     # Assert that the output contains the expected value
@@ -252,8 +252,8 @@ def test_write_2(capfd):
     storage = Storage()
     io = IO(storage)
     mem_key = '01'
-    instr = "+11" + mem_key
-    storage.memory[int(mem_key)] = -3456  # Pre-set a value in memory
+    instr = ['+',10,1]
+    storage.memory[instr[2]] = -3456  # Pre-set a value in memory
     io.write(instr)
     out, _ = capfd.readouterr()
     # Assert that the output contains the expected value
