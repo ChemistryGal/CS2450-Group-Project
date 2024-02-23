@@ -45,6 +45,7 @@ class IO:
             if check_valid_instruction(self.storage.memory[instr[2]][1]):
                 print("Oh no! You overwriting a memory location that has a valid instruction in it currently. Please review your txt file.")
                 self.storage.set_loc(101)
+                break
             try:
                 # Attempt to convert input to an integer
                 mem_value = input_string
@@ -76,7 +77,7 @@ class LS:
     def load(self, instr:list):
         int_location = instr[2]
         if int_location in self.storage.memory.keys():
-            self.storage.accumulator = self.storage.format(instr)
+            self.storage.accumulator = self.storage.format(self.storage.memory[instr[2]])
         else:
             self.storage.set_loc(101)
             print(f'Memory location {instr[2]} is empty! Please review you txt file to make sure you are referencing the coprrect location.')
@@ -134,6 +135,5 @@ class Arithmetic(ArithLogic):
         accu = self.storage.accumulator
         other = self.storage.format(self.storage.memory[int_location])
         result = accu*other
-        print(result)
         self.check_overflow(result)
         # print(f"Multiplied accumulator value: {self.storage.accumulator}")
