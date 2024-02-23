@@ -84,6 +84,7 @@ class LS:
         self.storage = storage
 
     def load(self, instr:list):
+        print(instr)
         int_location = instr[2]
         if int_location in self.storage.memory.keys():
             if type(self.storage.memory[int_location]) == list:
