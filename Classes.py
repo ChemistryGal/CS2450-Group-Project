@@ -88,7 +88,7 @@ class IO:
         while True:
             input_string = input("Enter a signed four-digit number: ")
             if check_valid_instruction(self.storage.memory[instr[2]][1]):
-                print("Oh no! You overwriting a memory location that has a valid instruction in it currently. Please review you txt file.")
+                print("Oh no! You overwriting a memory location that has a valid instruction in it currently. Please review your txt file.")
                 self.storage.set_loc(101)
             try:
                 # Attempt to convert input to an integer
