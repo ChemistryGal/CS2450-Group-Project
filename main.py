@@ -13,9 +13,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # Create storage obj and load data into memory
-    storage = Storage()
-    storage.load_memory(file)
-    execute_loop(storage)
-
-main()
