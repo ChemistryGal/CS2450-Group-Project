@@ -20,8 +20,7 @@ class Storage:
             loc = 0
             for line in f:
                 clean = line.strip()
-                if check_valid_instruction(int(clean[1:3])):
-                    self.memory[loc] = [clean[0:1], int(clean[1:3]), int(clean[3:5])]
+                self.memory[loc] = [clean[0:1], int(clean[1:3]), int(clean[3:5])]
                 loc += 1
         self.loc = 0
         print(self.memory)
@@ -37,5 +36,7 @@ class Storage:
     def format(self, instr):
         if instr[0] == '+':
              return int(str(instr[1])+str(instr[2]))
-        else:
+        elif instr[0] == '-':
             return int('-'+str(instr[1])+str(instr[2]))
+        else:
+            return int(instr)

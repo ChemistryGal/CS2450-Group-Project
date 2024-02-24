@@ -20,7 +20,7 @@ class UVSimulator:
         }
         # This is what connects the User interface to the commands.
         self.shared_input = None
-        self.shared_output = None
+        self.shared_output = []
         
     def load_program(self, file):
         if file is None:
@@ -30,8 +30,11 @@ class UVSimulator:
 
     def execute_instruction(self, instr):
         opcode = instr[1]
-        if opcode in self.commands:
+        if opcode in [20,21,30,31,32,33,40,41,42,43,10]:
             self.commands[opcode](instr)
+        else:
+            self.shared_output.append(self.commands[opcode](instr))
+            
 
     def run_program(self):
         while self.storage.loc < len(self.storage.memory):

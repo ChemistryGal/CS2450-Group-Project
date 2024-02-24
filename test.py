@@ -239,7 +239,6 @@ def test_read_2(monkeypatch):
 def test_write_1(capfd):
     storage = Storage()
     io = IO(storage)
-    mem_key = '01'
     instr = ['+',10,1]
     storage.memory[instr[2]] = 1234  # Pre-set a value in memory
     io.write(instr)
@@ -263,7 +262,7 @@ def test_write_2(capfd):
 def test_halt():
     storage = Storage()
     control = Control(storage)
-    control.halt()  # Execute the halt command
+    control.halt(['+',10,1])  # Execute the halt command
     # Assert that the storage's instruction pointer indicates the program should halt
     # 101 is outside of the range of what storage locations is supposed to be
     assert storage.loc == 101

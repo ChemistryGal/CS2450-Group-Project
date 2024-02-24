@@ -91,9 +91,15 @@ class AccumulatorView(tk.Frame):
 
     def run_file(self, controller: tkinterApp, event=None):
         # Placeholder function to notify the user
-        print(controller.file_path)
         result = controller.UVsim.load_program(controller.file_path)
-        print(result)
+        controller.UVsim.run_program()
+        write_var = controller.UVsim.shared_output
+        print(type(write_var))
+        if write_var is not None:
+            for out in write_var:
+                self.output_write = ttk.Label(self, text=out, font=SMALLFONT)
+                self.output_write.grid(row=1, column=1, padx=10, pady=10)
+        #controller.UVsim.run_program()
         if result == 1:
             controller.show_frame(StartPage)
 
