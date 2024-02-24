@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 from tkinter import ttk, filedialog
 from BusLogic import UVSimulator
@@ -52,7 +53,7 @@ class StartPage(tk.Frame):
 
         if file_path:
             controller.file_path = file_path
-            controller.frames[AccumulatorView].update_input(controller, font=SMALLFONT)
+            controller.frames[AccumulatorView].update_input(controller)
             controller.show_frame(AccumulatorView)
 
 class AccumulatorView(tk.Frame):
@@ -70,7 +71,7 @@ class AccumulatorView(tk.Frame):
         self.input_entry.grid(row=1, column=0, padx=10, pady=10)
 
         # Button to run the loaded file
-        run_button = ttk.Button(self, text="Run File", command=self.run_file(controller))
+        run_button = ttk.Button(self, text="Run File", command=lambda: self.run_file(controller))
         run_button.grid(row=2, column=0, padx=10, pady=10)
 
         # Load new file button
@@ -86,7 +87,7 @@ class AccumulatorView(tk.Frame):
         self.output_text.grid(row=1, column=1, padx=10, pady=10)
 
         # Bind the <Return> key event to the run_file function
-        self.input_entry.bind("<Return>", lambda event: self.run_file(controller))
+        self.input_entry.bind("<Return>", lambda event: self.run_file(controller, event))
 
     def run_file(self, controller: tkinterApp, event=None):
         # Placeholder function to notify the user

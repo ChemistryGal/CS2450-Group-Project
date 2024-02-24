@@ -24,6 +24,7 @@ class Storage:
                     self.memory[loc] = [clean[0:1], int(clean[1:3]), int(clean[3:5])]
                 loc += 1
         self.loc = 0
+        print(self.memory)
 
     # Returns the value at the specified location in memory (mem_key)
     def read_memory(self, mem_key):
