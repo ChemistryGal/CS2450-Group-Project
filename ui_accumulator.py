@@ -3,6 +3,7 @@ from tkinter import ttk, filedialog
 from BusLogic import UVSimulator
 
 LARGEFONT = ("Verdana", 20)
+SMALLFONT = ("Verdana", 10)
 
 class tkinterApp(tk.Tk):
     def __init__(self, UVSim:UVSimulator, *args, **kwargs):
@@ -51,8 +52,6 @@ class StartPage(tk.Frame):
 
         if file_path:
             controller.file_path = file_path
-            label = ttk.Label(self, text=file_path, font=SMALLFONT, justify="center")
-            label.grid(row=0, column=0, padx=10, pady=10)
             controller.frames[AccumulatorView].update_input(controller, font=SMALLFONT)
             controller.show_frame(AccumulatorView)
 
@@ -102,7 +101,7 @@ class AccumulatorView(tk.Frame):
         return self.input_entry.get()
 
     def update_input(self, controller):
-        self.input_label.config(text=controller.file_path)
+        self.input_label.config(text=controller.file_path, font=SMALLFONT, justify="center")
 
     def update_output(self, controller):
         self.output_label.config(text=controller.file_path)
