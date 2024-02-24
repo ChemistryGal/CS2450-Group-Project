@@ -41,3 +41,4 @@ class UVSimulator:
             instr = self.storage.memory[self.storage.loc]
             self.execute_instruction(instr)
             self.storage.loc += 1
+
