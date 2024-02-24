@@ -10,7 +10,7 @@ class tkinterApp(tk.Tk):
     def __init__(self, UVSim:UVSimulator, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         self.title("UVsim")
-        self.minsize(width=300, height=250)
+        self.minsize(width=750, height=300)
         self.maxsize(width=1500, height=600)
 
         container = tk.Frame(self)
@@ -75,16 +75,19 @@ class AccumulatorView(tk.Frame):
         run_button.grid(row=2, column=0, padx=10, pady=10)
 
         # Load new file button
-        ld_file = ttk.Button(self, text="Load New File", command=lambda: controller.frames[StartPage].load_file(controller))
-        ld_file.grid(row=3, column=0, padx=10, pady=10)
+        # ld_file = ttk.Button(self, text="Load New File", command=lambda: controller.frames[StartPage].load_file(controller))
+        # ld_file.grid(row=3, column=0, padx=10, pady=10)
 
         # Output side
-        self.output_label = ttk.Label(self, text="Output", font=LARGEFONT)
+        self.output_label = ttk.Label(self, text="Output", font=LARGEFONT, justify="right")
         self.output_label.grid(row=0, column=1, padx=10, pady=10)
 
         # Label for displaying output text
         self.output_text = ttk.Label(self, text="", font=("Helvetica", 16))
-        self.output_text.grid(row=1, column=1, padx=10, pady=10)
+        self.output_text.grid(row=1, column=1, padx=50, pady=50)
+
+        #Horizontal Line dividing
+        
 
         # Bind the <Return> key event to the run_file function
         self.input_entry.bind("<Return>", lambda event: self.run_file(controller, event))
@@ -94,11 +97,12 @@ class AccumulatorView(tk.Frame):
         result = controller.UVsim.load_program(controller.file_path)
         controller.UVsim.run_program()
         write_var = controller.UVsim.shared_output
-        print(type(write_var))
         if write_var is not None:
+            index = 1
             for out in write_var:
-                self.output_write = ttk.Label(self, text=out, font=SMALLFONT)
-                self.output_write.grid(row=1, column=1, padx=10, pady=10)
+                self.output_write = ttk.Label(self, text=out, font=('Helvetica',14,'bold'), foreground ="blue")
+                self.output_write.grid(row=index, column=1, padx=10, pady=10)
+                index+=1
         #controller.UVsim.run_program()
         if result == 1:
             controller.show_frame(StartPage)
@@ -108,7 +112,8 @@ class AccumulatorView(tk.Frame):
         return self.input_entry.get()
 
     def update_input(self, controller):
-        self.input_label.config(text=controller.file_path, font=SMALLFONT, justify="center")
+        file = os.path.basename(controller.file_path)
+        self.input_label.config(text=file, font=('Helvetica',14,'bold'), justify="center", foreground ="Green")
 
     def update_output(self, controller):
         self.output_label.config(text=controller.file_path)
