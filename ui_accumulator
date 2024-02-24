@@ -113,5 +113,5 @@ class AccumulatorView(tk.Frame):
     #     self.output_label.config(text=controller.file_path)
         
 # Driver Code - move and import these into the main function to run the application.
-app = tkinterApp(UVSimulator)
-app.mainloop()
+#app = tkinterApp(UVSimulator)
+#app.mainloop()
