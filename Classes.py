@@ -60,7 +60,6 @@ class IO:
 
     def read(self, instr):
         while True:
-            print(self.storage.read_memory(instr[2]))
             input_string = input("Enter a signed four-digit number: ")
             if check_valid_instruction(self.storage.read_memory(instr[2])[1]):
                 print("Oh no! You overwriting a memory location that has a valid instruction in it currently. Please review you txt file.")
@@ -82,12 +81,10 @@ class IO:
     def write(self, instr):
         # prints the returned value of the read_memory method
         item = self.storage.read_memory(instr[2])
-        print(item)
         if type(item) == list:
             res_str = self.storage.format(item)
         else:
             res_str = item
-        print(res_str)
         return res_str
 
 
@@ -139,7 +136,7 @@ class Arithmetic(ArithLogic):
         int_location = instr[2]
         accu = self.storage.accumulator
         other = self.storage.format(self.storage.memory[int_location])
-        result = other - accu
+        result = accu - other
         self.check_overflow(result)
         # print(f"Subtracted accumulator value: {self.storage.accumulator}")
 
