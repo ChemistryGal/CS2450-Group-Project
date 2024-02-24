@@ -111,7 +111,3 @@ class AccumulatorView(tk.Frame):
     #     # Update the labels with new data
     #     self.input_label.config(text=controller.file_path)
     #     self.output_label.config(text=controller.file_path)
-        
-# Driver Code - move and import these into the main function to run the application.
-#app = tkinterApp(UVSimulator)
-#app.mainloop()
