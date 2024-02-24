@@ -118,3 +118,4 @@ class AccumulatorView(tk.Frame):
     #     # Update the labels with new data
     #     self.input_label.config(text=controller.file_path)
     #     self.output_label.config(text=controller.file_path)
+
