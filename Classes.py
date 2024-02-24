@@ -50,7 +50,7 @@ class Control:
         elif self.storage.accumulator < 0:
             self.storage.set_loc(new_loc-1)
 
-    def halt(self):
+    def halt(self, instr):
         self.storage.loc = 101
 
 
@@ -60,11 +60,11 @@ class IO:
 
     def read(self, instr):
         while True:
+            print(self.storage.read_memory(instr[2]))
             input_string = input("Enter a signed four-digit number: ")
-            if check_valid_instruction(self.storage.memory[instr[2]][1]):
-                print("Oh no! You overwriting a memory location that has a valid instruction in it currently. Please review your txt file.")
+            if check_valid_instruction(self.storage.read_memory(instr[2])[1]):
+                print("Oh no! You overwriting a memory location that has a valid instruction in it currently. Please review you txt file.")
                 self.storage.set_loc(101)
-                break
             try:
                 # Attempt to convert input to an integer
                 mem_value = input_string
@@ -82,11 +82,13 @@ class IO:
     def write(self, instr):
         # prints the returned value of the read_memory method
         item = self.storage.read_memory(instr[2])
+        print(item)
         if type(item) == list:
-            res_str = ''.join(str(item) for item in item)
+            res_str = self.storage.format(item)
         else:
             res_str = item
         print(res_str)
+        return res_str
 
 
 class LS:
@@ -137,7 +139,7 @@ class Arithmetic(ArithLogic):
         int_location = instr[2]
         accu = self.storage.accumulator
         other = self.storage.format(self.storage.memory[int_location])
-        result = accu - other
+        result = other - accu
         self.check_overflow(result)
         # print(f"Subtracted accumulator value: {self.storage.accumulator}")
 
