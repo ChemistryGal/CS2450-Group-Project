@@ -1,4 +1,23 @@
 from BusLogic import *
+from Storage import Storage
+
+class ArithLogic:
+    def check_overflow(self, result):
+        if len(str(result)) > 4 and result>0:
+            temp = str(result)[:4]
+            self.storage.accumulator = int(temp)
+        elif len(str(result)) > 4 and result<0:
+            temp = str(result)[:5]
+            self.storage.accumulator = int(temp)
+        else:
+            self.storage.accumulator = result
+
+def check_valid_instruction(instruction):
+    valid_ins = [10, 11, 20, 21, 30,
+                 31, 32, 33, 40, 41, 42, 43]
+    if instruction in valid_ins:
+        return True
+    return False
 
 class Control:
     def __init__(self, storage :Storage):
