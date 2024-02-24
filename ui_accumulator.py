@@ -51,8 +51,9 @@ class StartPage(tk.Frame):
 
         if file_path:
             controller.file_path = file_path
-            print(controller)
-            controller.frames[AccumulatorView].update_input(controller)
+            label = ttk.Label(self, text=file_path, font=SMALLFONT, justify="center")
+            label.grid(row=0, column=0, padx=10, pady=10)
+            controller.frames[AccumulatorView].update_input(controller, font=SMALLFONT)
             controller.show_frame(AccumulatorView)
 
 class AccumulatorView(tk.Frame):
