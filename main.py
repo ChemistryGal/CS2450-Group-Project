@@ -1,4 +1,4 @@
-from BusLogic import UVSimulator
+from UVsimulator import UVSimulator
 from ui_accumulator import tkinterApp
 
 def main():

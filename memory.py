@@ -1,11 +1,6 @@
-def check_valid_instruction(instruction):
-    valid_ins = [10, 11, 20, 21, 30,
-                 31, 32, 33, 40, 41, 42, 43]
-    if instruction in valid_ins:
-        return True
-    return False
 
-class Storage:
+
+class Memory:
     def __init__(self):
         # Dictionary might be best to store each address and register.
         self.memory = {}
@@ -39,3 +34,11 @@ class Storage:
             return int('-'+str(instr[1])+str(instr[2]))
         else:
             return int(instr)
+
+    def check_valid_instruction(self, instruction):
+        opcode = instruction[1]
+        valid_ins = [10, 11, 20, 21, 30,
+                    31, 32, 33, 40, 41, 42, 43]
+        if opcode in valid_ins:
+            return True
+        return False

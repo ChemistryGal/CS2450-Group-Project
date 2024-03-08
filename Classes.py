@@ -1,26 +1,26 @@
-from BusLogic import *
-from Storage import Storage
+from UVsimulator import *
+from memory import Memory
 
-class ArithLogic:
-    def check_overflow(self, result):
-        if len(str(result)) > 4 and result>0:
-            temp = str(result)[:4]
-            self.storage.accumulator = int(temp)
-        elif len(str(result)) > 4 and result<0:
-            temp = str(result)[:5]
-            self.storage.accumulator = int(temp)
-        else:
-            self.storage.accumulator = result
+# class ArithLogic:
+#     def check_overflow(self, result):
+#         if len(str(result)) > 4 and result>0:
+#             temp = str(result)[:4]
+#             self.storage.accumulator = int(temp)
+#         elif len(str(result)) > 4 and result<0:
+#             temp = str(result)[:5]
+#             self.storage.accumulator = int(temp)
+#         else:
+#             self.storage.accumulator = result
 
-def check_valid_instruction(instruction):
-    valid_ins = [10, 11, 20, 21, 30,
-                 31, 32, 33, 40, 41, 42, 43]
-    if instruction in valid_ins:
-        return True
-    return False
+    # def check_valid_instruction(instruction):
+    #     valid_ins = [10, 11, 20, 21, 30,
+    #                 31, 32, 33, 40, 41, 42, 43]
+    #     if instruction in valid_ins:
+    #         return True
+    #     return False
 
 class Control:
-    def __init__(self, storage :Storage):
+    def __init__(self, storage :Memory):
         self.storage = storage
 
     # This function will branch to a new memory location
@@ -51,66 +51,69 @@ class Control:
             self.storage.set_loc(new_loc-1)
 
     def halt(self, instr):
+        print(f"HAULT at memory location: {self.storage.loc}")
         self.storage.loc = 101
 
 
 class IO:
-    def __init__(self, storage: Storage):
+    def __init__(self, storage: Memory):
         self.storage = storage
 
-    def read(self, instr):
-        while True:
-            input_string = input("Enter a signed four-digit number: ")
-            if check_valid_instruction(self.storage.read_memory(instr[2])[1]):
+    def read(self, instruction, user_input = None):
+            if user_input is None:
+                return self.read
+            input_string = user_input
+            if self.storage.check_valid_instruction(self.storage.read_memory(instruction[2])):
                 print("Oh no! You overwriting a memory location that has a valid instruction in it currently. Please review you txt file.")
                 self.storage.set_loc(101)
             try:
                 # Attempt to convert input to an integer
-                mem_value = input_string
-                if len(mem_value) == 4:
-                    mem_key = instr[2]
+                if len(input_string) == 5:
+                    mem_value = [input_string[0], int(input_string[1:3]), int(input_string[3:5])]
+                    mem_key = instruction[2]
                     # Input is valid; exit the loop
                     self.storage.write_memory(mem_key, mem_value)
-                    break
+                    print(self.storage.memory[mem_key])
                 else:
                     raise ValueError  # Input is not within the valid range
             except ValueError:
                 # This block executes if the input is not a valid integer or not in the range
                 print("Invalid input. Please enter a signed four-digit number.")
+                return self.read
+            
 
-    def write(self, instr):
+    def write(self, instruction):
         # prints the returned value of the read_memory method
-        item = self.storage.read_memory(instr[2])
+        item = self.storage.read_memory(instruction[2])
         if type(item) == list:
             res_str = self.storage.format(item)
         else:
             res_str = item
-        return res_str
-
+        # print(res_str)
+        return self.write
 
 class LS:
-    def __init__(self, storage: Storage):
+    def __init__(self, storage: Memory):
         self.storage = storage
 
-    def load(self, instr:list):
-        int_location = instr[2]
+    def load(self, instruction:list):
+        int_location = instruction[2]
         if int_location in self.storage.memory.keys():
-            self.storage.accumulator = self.storage.format(self.storage.memory[instr[2]])
+            self.storage.accumulator = self.storage.format(self.storage.memory[int_location])
         else:
             self.storage.set_loc(101)
-            print(f'Memory location {instr[2]} is empty! Please review you txt file to make sure you are referencing the coprrect location.')
+            print(f'Memory location {int_location} is empty! Please review you txt file to make sure you are referencing the coprrect location.')
         # print(f"Loaded accumulator with value at memory location: {location} accumulator value: {self.storage.accumulator}")
 
-    def store(self, instr:list):
-        int_location = instr[2]
+    def store(self, instruction:list):
+        int_location = instruction[2]
         if self.storage.accumulator == 0:
-            self.storage.memory[int_location] = "+0000"
+            self.storage.memory[int_location] = ["+", 0, 0]
         else:
             self.storage.memory[int_location] = self.storage.accumulator
         # print(f"Stored {self.storage.accumulator} at location {location}")
 
-
-class Arithmetic(ArithLogic):
+class Arithmetic:
     """integer arithmetic
 
     We want to keep the strings subscriptable so that the command line interface will work.
@@ -121,37 +124,47 @@ class Arithmetic(ArithLogic):
     - Nick
     """
 
-    def __init__(self, storage: Storage):
+    def __init__(self, storage: Memory):
         self.storage = storage
 
-    def add(self, instr: list):
-        int_location = instr[2]
+    def add(self, instruction: list):
+        int_location = instruction[2]
         other = self.storage.format(self.storage.memory[int_location])
         accu = self.storage.accumulator
         result = accu + other
         self.check_overflow(result)
         # print(f"Added accumulator value: {self.storage.accumulator}")
 
-    def sub(self, instr: list):
-        int_location = instr[2]
+    def sub(self, instruction: list):
+        int_location = instruction[2]
         accu = self.storage.accumulator
         other = self.storage.format(self.storage.memory[int_location])
         result = accu - other
         self.check_overflow(result)
         # print(f"Subtracted accumulator value: {self.storage.accumulator}")
 
-    def div(self, instr: list):
-        int_location = instr[2]
+    def div(self, instruction: list):
+        int_location = instruction[2]
         accu = self.storage.accumulator
         other = self.storage.format(self.storage.memory[int_location])
         result = accu/other
         self.check_overflow(result)
         # print(f"Divided accumulator value: {self.storage.accumulator}")
 
-    def mult(self, instr: list):
-        int_location = instr[2]
+    def mult(self, instruction: list):
+        int_location = instruction[2]
         accu = self.storage.accumulator
         other = self.storage.format(self.storage.memory[int_location])
         result = accu*other
         self.check_overflow(result)
         # print(f"Multiplied accumulator value: {self.storage.accumulator}")
+
+    def check_overflow(self, result):
+        if len(str(result)) > 4 and result>0:
+            temp = str(result)[:4]
+            self.storage.accumulator = int(temp)
+        elif len(str(result)) > 4 and result<0:
+            temp = str(result)[:5]
+            self.storage.accumulator = int(temp)
+        else:
+            self.storage.accumulator = result

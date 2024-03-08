@@ -1,7 +1,7 @@
 import os
 import tkinter as tk
 from tkinter import ttk, filedialog
-from BusLogic import UVSimulator
+from UVsimulator import UVSimulator
 
 LARGEFONT = ("Verdana", 20)
 SMALLFONT = ("Verdana", 10)
@@ -23,7 +23,7 @@ class tkinterApp(tk.Tk):
         self.file_path = None
         self.input_command = None
 
-        for F in (StartPage, AccumulatorView):
+        for F in (StartPage, AccumulatorView, InputPage):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -34,6 +34,39 @@ class tkinterApp(tk.Tk):
         frame = self.frames[cont]
         frame.tkraise()
 
+    def get_input(self):
+        frame = self.frames[InputPage]
+        frame.tkraise()
+
+    def output_trigger(self, output_msg: str):
+        frame = self.frames[AccumulatorView]
+        AccumulatorView.update_output(frame, output_msg=output_msg)
+        frame.tkraise()
+
+
+class InputPage(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+
+        # Input side
+        self.input_label = ttk.Label(self, text="Waiting for User input - Enter a Signed four digit code", font=LARGEFONT)
+        self.input_label.grid(row=0, column=0, padx=10, pady=10)
+
+        # Entry widget for input
+        self.input_entry = ttk.Entry(self)
+        self.input_entry.grid(row=1, column=0, padx=10, pady=10)
+
+        selectFileBTN = ttk.Button(self, text="submit", command=lambda: self.send_input(controller))
+        selectFileBTN.grid(row=2, column=0, padx=10, pady=30)
+
+    def send_input(self, controller:tkinterApp) -> str:
+        # TODO add vaildation checking for input 
+        input = self.input_entry.get()
+        controller.show_frame(AccumulatorView)
+        controller.UVsim.resume_execution(input)
 
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -95,14 +128,14 @@ class AccumulatorView(tk.Frame):
     def run_file(self, controller: tkinterApp, event=None):
         # Placeholder function to notify the user
         result = controller.UVsim.load_program(controller.file_path)
-        controller.UVsim.run_program()
-        write_var = controller.UVsim.shared_output
-        if write_var is not None:
-            index = 1
-            for out in write_var:
-                self.output_write = ttk.Label(self, text=out, font=('Helvetica',14,'bold'), foreground ="blue")
-                self.output_write.grid(row=index, column=1, padx=10, pady=10)
-                index+=1
+        controller.UVsim.run_program(read_callback=controller.get_input, write_callback=controller.output_trigger)
+        # write_var = controller.UVsim.shared_output
+        # if write_var is not None:
+        #     index = 1
+        #     for out in write_var:
+        #         self.output_write = ttk.Label(self, text=out, font=('Helvetica',14,'bold'), foreground ="blue")
+        #         self.output_write.grid(row=index, column=1, padx=10, pady=10)
+        #         index+=1
         #controller.UVsim.run_program()
         if result == 1:
             controller.show_frame(StartPage)
@@ -115,8 +148,9 @@ class AccumulatorView(tk.Frame):
         file = os.path.basename(controller.file_path)
         self.input_label.config(text=file, font=('Helvetica',14,'bold'), justify="center", foreground ="Green")
 
-    def update_output(self, controller):
-        self.output_label.config(text=controller.file_path)
+    def update_output(self, output_msg):
+        current_text = self.output_text.cget("text")
+        self.output_text.config(text= current_text + "\n" + output_msg)
 
 
     # def update_data(self, controller):    
