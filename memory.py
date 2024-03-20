@@ -10,15 +10,33 @@ class Memory:
     def set_loc(self, new_loc):
         self.loc = new_loc
 
-    def load_memory(self, file):
+    def read_file(self, file) -> list:
+        if file == None:
+            return 1
         with open(file, "r") as f:
-            loc = 0
+            temp_memory = []
             for line in f:
+                print(line)
                 clean = line.strip()
-                self.memory[loc] = [clean[0:1], int(clean[1:3]), int(clean[3:5])]
-                loc += 1
-        self.loc = 0
+                temp_memory.append(clean)
+        f.close()
+        return temp_memory
 
+    def load_memory(self, memory_list:list):
+        i = 0
+        while i < len(memory_list) and i < 100:
+                clean = memory_list[i].strip()
+                self.memory[i] = [clean[0:1], int(clean[1:3]), int(clean[3:5])]
+                i += 1
+        return clean
+        # with open(file, "r") as f:
+        #     # print("load_memory")
+        #     for line in f:
+        #         # print("line: ", line)
+
+        # self.loc = 0
+        # f.close()
+        
     # Returns the value at the specified location in memory (mem_key)
     def read_memory(self, mem_key):
         return self.memory[mem_key]
