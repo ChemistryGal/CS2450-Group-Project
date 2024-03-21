@@ -142,6 +142,8 @@ class AccumulatorView(tk.Frame):
         self.tree = ttk.Treeview(self.table_frame, columns=('Content'), show='headings')
         self.tree.heading('Content', text='Content')
         self.tree.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        
+        self.tree.bind("<Button-1>", self.on_double_click)
 
         # Button to select and run the loaded file
         self.run_button = ttk.Button(file_frame, text="Run File", command=lambda: self.run_file(controller))
@@ -167,12 +169,12 @@ class AccumulatorView(tk.Frame):
         # Bind the <Return> key event to the run_file function
         self.input_entry.bind("<Return>", lambda event: self.run_file(controller, event))
     
-        self.tree.bind("<Double-1>", self.on_double_click)
 
     # def load_file(self, controller: tkinterApp ):
     #     result = controller.UVsim.read_file(controller.file_path)
 
     def run_file(self, controller: tkinterApp, event=None):
+        self.output_text.config(text="")
         self.get_table_data(controller=controller)
         result = controller.UVsim.load_program(controller.file_contents)
         controller.UVsim.run_program(read_callback=controller.get_input, write_callback=controller.output_trigger)
@@ -205,18 +207,35 @@ class AccumulatorView(tk.Frame):
         controller.UVsim.resume_execution(input)
 
     def on_double_click(self, event):
-        item = self.tree.selection()[0]
-        column = self.tree.identify_column(event.x)
-        self.tree.item(item, values=(self.tree.item(item, 'values')[0],), open=True)
-        column = int(str(column).replace('#', ''))
-        row = self.tree.item(item, 'values')
+        try:
+            item = self.tree.selection()[0]
+            column = self.tree.identify_column(event.x)
 
-        # Create a simple entry for editing
-        self.entry = tk.Entry(self.tree, validate='key')
-        self.entry.insert(0, row[0])
-        self.entry.bind('<Return>', lambda _: self.update_data(item, column))
-        self.tree.window_create(self.tree.identify_region(event.x, event.y), window=self.entry)
-        self.entry.focus_set()
+            # Check if column exists
+            if column:
+                column = int(str(column).replace('#', ''))
+                row = self.tree.item(item, 'values')
+
+                # Create an Entry widget for editing
+                entry = tk.Entry(self.tree, validate='key')
+                entry.insert(0, row[0])
+                entry.bind('<Return>', lambda _: self.update_data(item, column))
+
+                # Place the Entry widget in the Treeview widget
+                self.tree.focus_set()
+                self.tree.selection_set(item)
+                self.tree.focus(item)
+                self.tree.set(item, column, '')
+                self.tree.bind('<Return>', lambda _: self.update_data(item, column))
+                self.tree.bind('<Escape>', lambda _: self.update_data(item, column))
+                self.tree.bind('<FocusOut>', lambda _: self.update_data(item, column))
+                self.tree.focus(item, column=column)
+                self.tree.window_create(item, window=entry)
+                entry.focus_set()
+                self.entry = entry  # Store the Entry widget to use later
+        except IndexError:
+            print("No item was selected.")
+
 
     def update_table(self, controller):
         # Clear existing data from the table
