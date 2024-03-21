@@ -73,7 +73,7 @@ class IO:
                     mem_key = instruction[2]
                     # Input is valid; exit the loop
                     self.storage.write_memory(mem_key, mem_value)
-                    print(self.storage.memory[mem_key])
+                    # print(self.storage.memory[mem_key])
                 else:
                     raise ValueError  # Input is not within the valid range
             except ValueError:
