@@ -12,12 +12,12 @@ from memory import Memory
 #         else:
 #             self.storage.accumulator = result
 
-    # def check_valid_instruction(instruction):
-    #     valid_ins = [10, 11, 20, 21, 30,
-    #                 31, 32, 33, 40, 41, 42, 43]
-    #     if instruction in valid_ins:
-    #         return True
-    #     return False
+#     def check_valid_instruction(instruction):
+#         valid_ins = [10, 11, 20, 21, 30,
+#                     31, 32, 33, 40, 41, 42, 43]
+#         if instruction in valid_ins:
+#             return True
+#         return False
 
 class Control:
     def __init__(self, storage :Memory):
