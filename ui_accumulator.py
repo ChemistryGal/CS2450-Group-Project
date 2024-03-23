@@ -240,7 +240,7 @@ class AccumulatorView(tk.Frame):
                     self.tree.clipboard_append("+0000")
             except:
                 pass
-            self.tree.clipboard_append("\n")
+            
         print(self.tree.clipboard_get())
 
 
