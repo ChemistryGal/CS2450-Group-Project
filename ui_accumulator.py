@@ -3,6 +3,8 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 from UVsimulator import UVSimulator
 from tkinter import messagebox
+import sys
+
 
 LARGEFONT = ("Verdana", 20)
 SMALLFONT = ("Verdana", 10)
@@ -84,20 +86,6 @@ class StartPage(tk.Frame):
         selectFileBTN = ttk.Button(self, text="Choose a file", command=lambda: controller.load_file())
         selectFileBTN.grid(row=1, column=0, padx=10, pady=30)
 
-    # def load_file(self, controller: tkinterApp):
-    #     file_path = filedialog.askopenfilename(title="Select a file")
-
-    #     if file_path:
-    #         controller.file_path = file_path
-    #         controller.frames[AccumulatorView].update_input(controller)
-    #         result = controller.UVsim.read_file(controller.file_path)
-    #         controller.file_contents = result
-
-    #         controller.frames[AccumulatorView].update_table(controller)
-
-
-    #         controller.show_frame(AccumulatorView)
-
 class AccumulatorView(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -157,6 +145,16 @@ class AccumulatorView(tk.Frame):
         self.tree.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
 
         self.tree.bind("<<TreeviewSelect>>", lambda event: self.item_select(event=event, controller=controller))
+        if sys.platform == 'darwin':  # macOS
+            self.tree.bind("<Command-v>", lambda event: self.paste_text(event=event) )
+        else:  # Windows and other platforms
+            self.tree.bind("<Control-v>", lambda event: self.paste_text(event=event))
+
+        if sys.platform == 'darwin':  # macOS
+            self.tree.bind("<Command-c>", lambda event: self.copy_selection(event=event, controller=controller) )
+        else:  # Windows and other platforms
+            self.tree.bind("<control-c>", lambda event: self.copy_selection(event=event, controller=controller) )
+
         self.tree.bind("<Delete>", lambda event: self.item_delete(event=event, controller=controller))
 
         # Button to select and run the loaded file
@@ -190,6 +188,11 @@ class AccumulatorView(tk.Frame):
     # def load_file(self, controller: tkinterApp ):
     #     result = controller.UVsim.read_file(controller.file_path)
     
+    def paste_text(event):
+        widget = event.widget
+        text = widget.clipboard_get()
+        widget.insert(tk.INSERT, text)
+
     def item_delete(self, event, controller:tkinterApp):
         print(controller.file_contents)
 
@@ -204,6 +207,28 @@ class AccumulatorView(tk.Frame):
         print(self.tree)
         for i in self.tree.selection():
             print(self.tree.item(i)["values"])
+
+    def copy_selection(self, event, controller):
+        self.tree.clipboard_clear()
+        selection = self.tree.selection()
+        column = self.tree.identify_column(event.x)
+        column_no = int(column.replace("#", "")) - 1
+        print("copy ")
+        for each in selection:
+            try:
+                value = self.tree.item(each)["values"][column_no]
+                if value != 0:
+                    if value > 0:
+                        self.tree.clipboard_append('+' + str(value))
+                    else:
+                        self.tree.clipboard_append('-' + str(value))
+                else:
+                    self.tree.clipboard_append("+0000")
+            except:
+                pass
+            # print(each)
+        print(self.tree.clipboard_get())
+
 
     def run_file(self, controller: tkinterApp, event=None):
         self.output_text.config(text="")
