@@ -2,7 +2,9 @@
 
 ## Introduction
 
-Hello and welcome to uvSim! uvSim is a virtual machine designed for interpreting BasicML.
+Hello and welcome to uvSim! uvSim is a virtual machine designed for interpreting BasicML. Our app contains a options Menu in the top left, and 
+in this menu you can customer the colors used in this application. You can also select a new file as well, and you can also exit the app and through
+this menu as well.
 
 ## Getting Started
 
@@ -18,8 +20,8 @@ To run this program, follow these simple steps:
 3. The system will open a GUI
 4. You will select a file
 5. Upon selecting a file you will see a screen that has a button to run the file. Click on "Run File".
-
-   NOTE: As a team we ran into issues with reading from our GUI application. This is one requirement that is taking longer than expected to deliver. The rest of the app depends on this input functionality. Since we didn't get this figured out in time we wanted to still have something working. The current version will allow you to run the file through the GUI but the input must be done through the command line. A prompt will appear in the console for input. We hope as our customer you will have patience with us as we resolve this issue.
+6. There will be a spot for input and when you type it in you can clcik resume execution to submit the input.
+7. There is also a button to run another file if you choose or you can close the application.
 
 ## Example Input File
 
