@@ -12,12 +12,12 @@ from memory import Memory
 #         else:
 #             self.storage.accumulator = result
 
-    # def check_valid_instruction(instruction):
-    #     valid_ins = [10, 11, 20, 21, 30,
-    #                 31, 32, 33, 40, 41, 42, 43]
-    #     if instruction in valid_ins:
-    #         return True
-    #     return False
+#     def check_valid_instruction(instruction):
+#         valid_ins = [10, 11, 20, 21, 30,
+#                     31, 32, 33, 40, 41, 42, 43]
+#         if instruction in valid_ins:
+#             return True
+#         return False
 
 class Control:
     def __init__(self, storage :Memory):
@@ -84,6 +84,7 @@ class IO:
 
     def write(self, instruction):
         # prints the returned value of the read_memory method
+        print(instruction)
         item = self.storage.read_memory(instruction[2])
         if type(item) == list:
             res_str = self.storage.format(item)
@@ -100,6 +101,7 @@ class LS:
         int_location = instruction[2]
         if int_location in self.storage.memory.keys():
             self.storage.accumulator = self.storage.format(self.storage.memory[int_location])
+
         else:
             self.storage.set_loc(101)
             print(f'Memory location {int_location} is empty! Please review you txt file to make sure you are referencing the coprrect location.')
@@ -110,7 +112,36 @@ class LS:
         if self.storage.accumulator == 0:
             self.storage.memory[int_location] = ["+", 0, 0]
         else:
-            self.storage.memory[int_location] = self.storage.accumulator
+            # Format data when it is stored back into memory
+            if self.storage.accumulator < 0 :
+                self.storage.memory[int_location] = ["-"]
+            else:
+                self.storage.memory[int_location] = ["+"]
+            
+            # Turn data into a string 
+            # self.storage.
+            
+            # Get the number of digits in the integer
+            num_digits = len(str(self.storage.accumulator))
+
+            if num_digits > 2:
+                # Calculate divisor to isolate first two digits
+                divisor = 10 ** (num_digits - 2)
+
+                # Extract the first two digits
+                first_two = self.storage.accumulator // divisor
+
+                if num_digits < 4:
+                    least_significant = self.storage.accumulator % 10
+                else:
+                    least_significant = self.storage.accumulator % 100
+            else:
+                first_two = 0
+                least_significant = self.storage.accumulator
+
+            self.storage.memory[int_location].append(int(first_two))
+            self.storage.memory[int_location].append(least_significant)
+            
         # print(f"Stored {self.storage.accumulator} at location {location}")
 
 class Arithmetic:
