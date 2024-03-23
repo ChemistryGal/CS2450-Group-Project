@@ -3,19 +3,21 @@ import pytest
 # pytest test.py
 
 
-from Classes import Storage, Control, Arithmetic, LS, IO
+from Classes import *
+from UVsimulator import *
+from memory import Memory
 
 
 @pytest.fixture
 def storage():
-    return Storage()
+    return Memory()
 
 
 # Control Operation Tests
 
 
 def test_branch_1():
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1], 1: ["+", 10, 2],
                       2: ["+", 40, 3], 3: ["+", 0, 0]}
     ctrl = Control(storage)
@@ -24,7 +26,7 @@ def test_branch_1():
 
 
 def test_branch_2():
-    storage = Storage()
+    storage = Memory()
     # storage.memory = {0: 1001, 1: 1002, 2: 4099, 99: 0000}
     storage.memory = {0: ["+", 10, 1], 1: ["+", 10, 2],
                       2: ["+", 40, 99], 99: ["+", 0, 0]}
@@ -34,7 +36,7 @@ def test_branch_2():
 
 
 def test_branch_3():
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 0]}
     ctrl = Control(storage)
@@ -43,7 +45,7 @@ def test_branch_3():
 
 
 def test_branch_neg_1():
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 0]}
     storage.accumulator = -1
@@ -53,7 +55,7 @@ def test_branch_neg_1():
 
 
 def test_branch_neg_2():
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 0]}
     storage.accumulator = 0
@@ -63,7 +65,7 @@ def test_branch_neg_2():
 
 
 def test_branch_neg_3():
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 0]}
     storage.accumulator = -1
@@ -73,7 +75,7 @@ def test_branch_neg_3():
 
 
 def test_branch_zero_1():
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 0]}
     storage.accumulator = 0
@@ -83,7 +85,7 @@ def test_branch_zero_1():
 
 
 def test_branch_zero_2():
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 0]}
     storage.accumulator = 1234
@@ -93,8 +95,7 @@ def test_branch_zero_2():
 
 
 def test_branch_zero_3():
-    storage = Storage()
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 0]}
     storage.accumulator = -1
@@ -104,7 +105,7 @@ def test_branch_zero_3():
 
 
 def test_add_1():
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 3]}
     storage.accumulator = 13
@@ -114,8 +115,7 @@ def test_add_1():
 
 
 def test_add_2():
-    storage = Storage()
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 17]}
     storage.accumulator = 13
@@ -125,8 +125,7 @@ def test_add_2():
 
 
 def test_sub_1():
-    storage = Storage()
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 3]}
     storage.accumulator = 23
@@ -136,8 +135,7 @@ def test_sub_1():
 
 
 def test_sub_2():
-    storage = Storage()
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 3]}
     storage.accumulator = 9
@@ -147,8 +145,7 @@ def test_sub_2():
 
 
 def test_divide_1():
-    storage = Storage()
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 2]}
     storage.accumulator = 30
@@ -158,8 +155,7 @@ def test_divide_1():
 
 
 def test_divide_2():
-    storage = Storage()
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 1]}
     storage.accumulator = 12
@@ -169,8 +165,7 @@ def test_divide_2():
 
 
 def test_multiply_1():
-    storage = Storage()
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 3]}
     storage.accumulator = 10
@@ -180,8 +175,7 @@ def test_multiply_1():
 
 
 def test_multiply_2():
-    storage = Storage()
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 4]}
     storage.accumulator = 4
@@ -191,8 +185,7 @@ def test_multiply_2():
 
 
 def test_multiply_3():
-    storage = Storage()
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 2]}
     storage.accumulator = 25
@@ -222,8 +215,7 @@ def test_multiply_3():
 
 
 def test_load_1():
-    storage = Storage()
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 4]}
     loader = LS(storage)
@@ -232,8 +224,7 @@ def test_load_1():
 
 
 def test_load_2():
-    storage = Storage()
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 4]}
     loader = LS(storage)
@@ -242,8 +233,7 @@ def test_load_2():
 
 
 def test_load_3():
-    storage = Storage()
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ["+", 10, 1],
                       1: ["+", 10, 2], 2: ["+", 40, 3], 3: ["+", 0, 4]}
     loader = LS(storage)
@@ -254,14 +244,13 @@ def test_load_3():
 def test_read_1(monkeypatch):
     # Simulate user input
     monkeypatch.setattr('builtins.input', lambda _: '1234')
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ['+', 10, 1], 1: ['+', 0, 0]}
     io = IO(storage)
     instr = ['+', 10, 1]
     io.read(instr)
     # Assert that the input value is stored in the correct memory location
     # Adjust this according to how you handle values in memory
-    print(storage.memory)
     assert storage.memory[instr[2]] == '1234'
 
 
@@ -269,19 +258,18 @@ def test_read_2(monkeypatch):
     # Simulate user input
     input = '4321'
     monkeypatch.setattr('builtins.input', lambda _: input)
-    storage = Storage()
+    storage = Memory()
     storage.memory = {0: ['+', 10, 1], 1: ['+', 0, 0]}
     io = IO(storage)
     instr = ['+', 10, 1]
     io.read(instr)
     # Assert that the input value is stored in the correct memory location
     # Adjust this according to how you handle values in memory
-    print(storage.memory)
     assert storage.memory[instr[2]] == '4321'
 
 
 def test_write_1(capfd):
-    storage = Storage()
+    storage = Memory()
     io = IO(storage)
     mem_key = '01'
     instr = ['+',10,1]
@@ -293,7 +281,7 @@ def test_write_1(capfd):
 
 
 def test_write_2(capfd):
-    storage = Storage()
+    storage = Memory()
     io = IO(storage)
     mem_key = '01'
     instr = ['+', 10, 1]
@@ -305,7 +293,7 @@ def test_write_2(capfd):
 
 
 def test_halt():
-    storage = Storage()
+    storage = Memory()
     control = Control(storage)
     control.halt(['+',10,1])  # Execute the halt command
     # Assert that the storage's instruction pointer indicates the program should halt
