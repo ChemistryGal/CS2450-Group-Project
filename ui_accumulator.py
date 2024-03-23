@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 from UVsimulator import UVSimulator
 from tkinter import messagebox
+from tkinter import colorchooser
 
 LARGEFONT = ("Verdana", 20)
 SMALLFONT = ("Verdana", 10)
