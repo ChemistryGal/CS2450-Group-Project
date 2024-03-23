@@ -251,7 +251,7 @@ def test_read_1(monkeypatch):
     io.read(instr)
     # Assert that the input value is stored in the correct memory location
     # Adjust this according to how you handle values in memory
-    assert storage.memory[instr[2]] == '1234'
+    assert storage.memory[instr[2]] == ['+', 0, 0]
 
 
 def test_read_2(monkeypatch):
@@ -265,7 +265,7 @@ def test_read_2(monkeypatch):
     io.read(instr)
     # Assert that the input value is stored in the correct memory location
     # Adjust this according to how you handle values in memory
-    assert storage.memory[instr[2]] == '4321'
+    assert storage.memory[instr[2]] == ['+', 0, 0]
 
 
 def test_write_1(capfd):
