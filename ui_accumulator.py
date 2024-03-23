@@ -72,6 +72,19 @@ class tkinterApp(tk.Tk):
 
             self.show_frame(AccumulatorView)
 
+    def load_file(self):
+        file_path = filedialog.askopenfilename(title="Select a file")
+
+        if file_path:
+            self.file_path = file_path
+            self.frames[AccumulatorView].update_input(self)
+            result = self.UVsim.read_file(self.file_path)
+            self.file_contents = result
+
+            self.frames[AccumulatorView].update_table(self)
+
+            self.show_frame(AccumulatorView)
+
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -83,6 +96,7 @@ class StartPage(tk.Frame):
         label = ttk.Label(self, text="Welcome to UVSim!", font=LARGEFONT, justify='center')
         label.grid(row=0, column=0, padx=10, pady=10)
 
+        selectFileBTN = ttk.Button(self, text="Choose a file", command=lambda: controller.load_file())
         selectFileBTN = ttk.Button(self, text="Choose a file", command=lambda: controller.load_file())
         selectFileBTN.grid(row=1, column=0, padx=10, pady=30)
 
@@ -162,7 +176,7 @@ class AccumulatorView(tk.Frame):
         self.run_button.grid(row=3, column=0, padx=10, pady=10, sticky="new")
 
         # Button to select and run the loaded file
-        self.new_file_btn = ttk.Button(file_frame, text="Load New", command=lambda: controller.load_file())
+        self.new_file_btn = ttk.Button(file_frame, text="Load New File", command=lambda: controller.load_file())
         self.new_file_btn.grid(row=4, column=0, padx=10, pady=10, sticky="new")
 
         # Labels and widgets for IO operations section
