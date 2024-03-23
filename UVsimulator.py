@@ -48,22 +48,8 @@ class UVSimulator:
                 self.IO_callbacks["read"]()
             elif result == self.cpu.io.write:
                 self.waiting_io = True
-                self.memory.loc += 1
-                most_significant_digits = str(self.memory.memory[self.memory.read_memory(self.memory.loc - 1)[2]][1])
-                least_significant_digits = str(self.memory.memory[self.memory.read_memory(self.memory.loc - 1)[2]][2])
-
-                if len(most_significant_digits) < 2:     
-                    output_msg = "0" + most_significant_digits
-                else:
-                    output_msg = most_significant_digits
+                self.IO_callbacks["write"](self.get_memory())
                 
-                if len(least_significant_digits) < 2:     
-                    output_msg += "0" + least_significant_digits
-                else:
-                    output_msg += least_significant_digits
-                
-                self.IO_callbacks["write"](output_msg)
-                   
     def run_program(self, read_callback, write_callback):
         self.IO_callbacks["read"] = read_callback
         self.IO_callbacks["write"] = write_callback

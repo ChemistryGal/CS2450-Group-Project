@@ -3,14 +3,13 @@ import tkinter as tk
 from tkinter import ttk, filedialog
 from UVsimulator import UVSimulator
 from tkinter import messagebox
-import sys
-
+from tkinter import colorchooser
 
 LARGEFONT = ("Verdana", 20)
 SMALLFONT = ("Verdana", 10)
 
-UVUBACKGROUND = "green"
-DEFAULTBACKGROUND = "gray"
+DEFAULTBACKGROUND = "#4c721d"
+CUSTOMCOLOR = "#FFFFFF"
 
 class tkinterApp(tk.Tk):
     def __init__(self, UVSim:UVSimulator, *args, **kwargs):
@@ -41,6 +40,45 @@ class tkinterApp(tk.Tk):
 
         self.show_frame(StartPage)
 
+        def primaryColor():
+            primary_color = colorchooser.askcolor()[1]
+            global DEFAULTBACKGROUND
+            DEFAULTBACKGROUND = primary_color
+            if primary_color:
+                for F in (StartPage, AccumulatorView):
+                    frame = F(main_frame, self)
+                    frame.config(bg=DEFAULTBACKGROUND)
+                    self.frames[F] = frame
+                    frame.grid(row=0, column=0, sticky="nsew")
+                self.show_frame(StartPage)
+
+        def secondaryColor():
+            secondary_color = colorchooser.askcolor()[1]
+            global CUSTOMCOLOR
+            CUSTOMCOLOR = secondary_color
+            if secondary_color:
+                print(secondary_color)
+                for F in (StartPage, AccumulatorView):
+                    frame = F(main_frame, self)
+                    frame.config(bg=DEFAULTBACKGROUND)
+                    self.frames[F] = frame
+                    frame.grid(row=0, column=0, sticky="nsew")
+                self.show_frame(StartPage)
+
+        def newFile():
+            self.show_frame(StartPage)
+
+        my_menu = tk.Menu(self)
+        self.config(menu = my_menu)
+
+        option_menu = tk.Menu(my_menu, tearoff=0)
+        my_menu.add_cascade(label="Options", menu=option_menu)
+        option_menu.add_command(label="Change Primary Color", command=primaryColor)
+        option_menu.add_command(label="Change Secondary Color", command=secondaryColor)
+        option_menu.add_command(label="New File", command=newFile)
+        option_menu.add_separator()
+        option_menu.add_command(label="Exit App", command=self.quit)
+
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
@@ -59,32 +97,6 @@ class tkinterApp(tk.Tk):
         AccumulatorView.update_output(frame, self, output_msg=output_msg)
         frame.tkraise()
 
-    def load_file(self):
-        file_path = filedialog.askopenfilename(title="Select a file")
-
-        if file_path:
-            self.file_path = file_path
-            self.frames[AccumulatorView].update_input(self)
-            result = self.UVsim.read_file(self.file_path)
-            self.file_contents = result
-
-            self.frames[AccumulatorView].update_table(self)
-
-            self.show_frame(AccumulatorView)
-
-    def load_file(self):
-        file_path = filedialog.askopenfilename(title="Select a file")
-
-        if file_path:
-            self.file_path = file_path
-            self.frames[AccumulatorView].update_input(self)
-            result = self.UVsim.read_file(self.file_path)
-            self.file_contents = result
-
-            self.frames[AccumulatorView].update_table(self)
-
-            self.show_frame(AccumulatorView)
-
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -96,14 +108,28 @@ class StartPage(tk.Frame):
         label = ttk.Label(self, text="Welcome to UVSim!", font=LARGEFONT, justify='center')
         label.grid(row=0, column=0, padx=10, pady=10)
 
-        selectFileBTN = ttk.Button(self, text="Choose a file", command=lambda: controller.load_file())
-        selectFileBTN = ttk.Button(self, text="Choose a file", command=lambda: controller.load_file())
+        selectFileBTN = ttk.Button(self, text="Choose a file", command=lambda: self.load_file(controller))
         selectFileBTN.grid(row=1, column=0, padx=10, pady=30)
+
+    def load_file(self, controller: tkinterApp):
+        file_path = filedialog.askopenfilename(title="Select a file")
+
+        if file_path:
+            controller.file_path = file_path
+            controller.frames[AccumulatorView].update_input(controller)
+            result = controller.UVsim.read_file(controller.file_path)
+            controller.file_contents = result
+
+            controller.frames[AccumulatorView].update_table(controller)
+
+
+            controller.show_frame(AccumulatorView)
 
 class AccumulatorView(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-
+        
+        global CUSTOMCOLOR
         # Set up grid weights for responsive resizing
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure([0,1], weight=1)
@@ -113,13 +139,13 @@ class AccumulatorView(tk.Frame):
         self.IO_label.grid(row=0, column=0, padx=10, pady=10, columnspan=2)
 
         # Frames for file loading and IO operations
-        file_frame = tk.Frame(self, bg='grey', bd=2, relief='ridge')
+        file_frame = tk.Frame(self, bg=CUSTOMCOLOR, bd=2, relief='ridge')
         file_frame.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
-        file_frame.config(bg="gray8")
+        file_frame.config(bg=CUSTOMCOLOR)
 
-        io_frame = tk.Frame(self, bg='grey', bd=2, relief='ridge')
+        io_frame = tk.Frame(self, bg=CUSTOMCOLOR, bd=2, relief='ridge')
         io_frame.grid(row=1, column=1, padx=10, pady=5, sticky="nsew")
-        io_frame.config(bg="gray8")
+        io_frame.config(bg=CUSTOMCOLOR)
 
         # Set up grid weights for responsive resizing within frames
         file_frame.grid_rowconfigure(0, weight=1)
@@ -128,16 +154,16 @@ class AccumulatorView(tk.Frame):
         io_frame.grid_rowconfigure(0, weight=1)
         io_frame.grid_columnconfigure(0, weight=1)
 
-        input_frame = tk.Frame(io_frame, bg='grey', bd=2, relief='ridge')
+        input_frame = tk.Frame(io_frame, bg=CUSTOMCOLOR, bd=2, relief='ridge')
         input_frame.grid(row=0, column=0, padx=10, pady=5, sticky="nsew")
-        input_frame.config(bg="gray")
+        input_frame.config(bg=CUSTOMCOLOR)
         # Set up grid weights for responsive resizing
         input_frame.grid_rowconfigure(0, weight=1)
         input_frame.grid_columnconfigure(0, weight=1)
 
-        output_frame = tk.Frame(io_frame, bg='grey', bd=2, relief='ridge')
+        output_frame = tk.Frame(io_frame, bg=CUSTOMCOLOR, bd=2, relief='ridge')
         output_frame.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
-        output_frame.config(bg="gray")
+        output_frame.config(bg=CUSTOMCOLOR)
         # Set up grid weights for responsive resizing
         output_frame.grid_rowconfigure(0, weight=1)
         output_frame.grid_columnconfigure(0, weight=1)
@@ -151,36 +177,21 @@ class AccumulatorView(tk.Frame):
         self.file_name_label.grid(row=1, column=0, padx=10, pady=10, sticky="new")
 
         # Table frame for file editing
-        self.table_frame = tk.Frame(file_frame, bg='grey')
+        self.table_frame = tk.Frame(file_frame, bg=CUSTOMCOLOR)
         self.table_frame.grid(row=2, column=0)
        # Treeview widget for displaying and editing data
-        self.tree = ttk.Treeview(self.table_frame, columns=('Data'), show='headings')
-        self.tree.heading('Data', text='BasicML')
+        self.tree = ttk.Treeview(self.table_frame, columns=('Content'), show='headings')
+        self.tree.heading('Content', text='Content')
         self.tree.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-
-        self.tree.bind("<<TreeviewSelect>>", lambda event: self.item_select(event=event, controller=controller))
-        if sys.platform == 'darwin':  # macOS
-            self.tree.bind("<Command-v>", lambda event: self.paste_text(event=event) )
-        else:  # Windows and other platforms
-            self.tree.bind("<Control-v>", lambda event: self.paste_text(event=event))
-
-        if sys.platform == 'darwin':  # macOS
-            self.tree.bind("<Command-c>", lambda event: self.copy_selection(event=event, controller=controller) )
-        else:  # Windows and other platforms
-            self.tree.bind("<control-c>", lambda event: self.copy_selection(event=event, controller=controller) )
-
-        self.tree.bind("<Delete>", lambda event: self.item_delete(event=event, controller=controller))
+        
+        self.tree.bind("<Button-1>", self.on_double_click)
 
         # Button to select and run the loaded file
         self.run_button = ttk.Button(file_frame, text="Run File", command=lambda: self.run_file(controller))
         self.run_button.grid(row=3, column=0, padx=10, pady=10, sticky="new")
 
-        # Button to select and run the loaded file
-        self.new_file_btn = ttk.Button(file_frame, text="Load New File", command=lambda: controller.load_file())
-        self.new_file_btn.grid(row=4, column=0, padx=10, pady=10, sticky="new")
-
         # Labels and widgets for IO operations section
-        self.IO_label = ttk.Label(input_frame, text="Input", font=LARGEFONT, background="gray")
+        self.IO_label = ttk.Label(input_frame, text="Input", font=LARGEFONT, background=CUSTOMCOLOR)
         self.IO_label.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
 
         self.input_entry = ttk.Entry(input_frame)
@@ -199,56 +210,16 @@ class AccumulatorView(tk.Frame):
         # Bind the <Return> key event to the run_file function
         self.input_entry.bind("<Return>", lambda event: self.run_file(controller, event))
     
+
     # def load_file(self, controller: tkinterApp ):
     #     result = controller.UVsim.read_file(controller.file_path)
-    
-    def paste_text(event):
-        widget = event.widget
-        text = widget.clipboard_get()
-        widget.insert(tk.INSERT, text)
-
-    def item_delete(self, event, controller:tkinterApp):
-        print(controller.file_contents)
-
-        print("delete")
-        for i, item in enumerate(self.tree.selection()):
-            # controller.file_contents
-            self.tree.delete(item)
-        
-        print(controller.file_contents)
-
-    def item_select(self, event, controller:tkinterApp):
-        print(self.tree)
-        for i in self.tree.selection():
-            print(self.tree.item(i)["values"])
-
-    def copy_selection(self, event, controller):
-        self.tree.clipboard_clear()
-        selection = self.tree.selection()
-        column = self.tree.identify_column(event.x)
-        column_no = int(column.replace("#", "")) - 1
-        print("copy ")
-        for each in selection:
-            try:
-                value = self.tree.item(each)["values"][column_no]
-                if value != 0:
-                    if value > 0:
-                        self.tree.clipboard_append('+' + str(value))
-                    else:
-                        self.tree.clipboard_append('-' + str(value))
-                else:
-                    self.tree.clipboard_append("+0000")
-            except:
-                pass
-            # print(each)
-        print(self.tree.clipboard_get())
-
 
     def run_file(self, controller: tkinterApp, event=None):
         self.output_text.config(text="")
         self.get_table_data(controller=controller)
         result = controller.UVsim.load_program(controller.file_contents)
         controller.UVsim.run_program(read_callback=controller.get_input, write_callback=controller.output_trigger)
+
         if result == 1:
             controller.show_frame(StartPage)
 
@@ -267,13 +238,45 @@ class AccumulatorView(tk.Frame):
         self.file_name_label.config(text=file, font=('Helvetica',14,'bold'), justify="center")
 
     def update_output(self, controller, output_msg ):
-        self.output_text.config(text= output_msg)
+        current_text = self.output_text.cget("text")
+        self.output_text.config(text= current_text + "\n" + output_msg)
         controller.UVsim.resume_execution()
 
     def send_input(self, controller:tkinterApp):
         input = self.input_entry.get()
         self.send_btn.config(state="disabled")
         controller.UVsim.resume_execution(input)
+
+    def on_double_click(self, event):
+        try:
+            item = self.tree.selection()[0]
+            column = self.tree.identify_column(event.x)
+
+            # Check if column exists
+            if column:
+                column = int(str(column).replace('#', ''))
+                row = self.tree.item(item, 'values')
+
+                # Create an Entry widget for editing
+                entry = tk.Entry(self.tree, validate='key')
+                entry.insert(0, row[0])
+                entry.bind('<Return>', lambda _: self.update_data(item, column))
+
+                # Place the Entry widget in the Treeview widget
+                self.tree.focus_set()
+                self.tree.selection_set(item)
+                self.tree.focus(item)
+                self.tree.set(item, column, '')
+                self.tree.bind('<Return>', lambda _: self.update_data(item, column))
+                self.tree.bind('<Escape>', lambda _: self.update_data(item, column))
+                self.tree.bind('<FocusOut>', lambda _: self.update_data(item, column))
+                self.tree.focus(item, column=column)
+                self.tree.window_create(item, window=entry)
+                entry.focus_set()
+                self.entry = entry  # Store the Entry widget to use later
+        except IndexError:
+            print("No item was selected.")
+
 
     def update_table(self, controller):
         # Clear existing data from the table
