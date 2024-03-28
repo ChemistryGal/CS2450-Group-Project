@@ -2,21 +2,21 @@ import os
 import tkinter as tk
 from tkinter import ttk, filedialog
 from UVsimulator import UVSimulator
-from tkinter import messagebox
+from tkinter import messagebox, colorchooser
 import sys
 
 
 LARGEFONT = ("Verdana", 20)
 SMALLFONT = ("Verdana", 10)
 
-UVUBACKGROUND = "green"
-DEFAULTBACKGROUND = "gray"
+DEFAULTBACKGROUND = "#4c721d"
+CUSTOMCOLOR = "#FFFFFF"
 
 class tkinterApp(tk.Tk):
     def __init__(self, UVSim:UVSimulator, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
         self.title("UVsim")
-        self.config(bg="gray")
+        self.config(bg=DEFAULTBACKGROUND)
         self.minsize(500, 500)
 
         # Create a frame that will expand to fill the window
@@ -40,6 +40,45 @@ class tkinterApp(tk.Tk):
             frame.grid(row=0, column=0, sticky="nsew")
 
         self.show_frame(StartPage)
+
+        def primaryColor():
+            primary_color = colorchooser.askcolor()[1]
+            global DEFAULTBACKGROUND
+            DEFAULTBACKGROUND = primary_color
+            if primary_color:
+                for F in (StartPage, AccumulatorView):
+                    frame = F(main_frame, self)
+                    frame.config(bg=DEFAULTBACKGROUND)
+                    self.frames[F] = frame
+                    frame.grid(row=0, column=0, sticky="nsew")
+                self.show_frame(StartPage)
+
+        def secondaryColor():
+            secondary_color = colorchooser.askcolor()[1]
+            global CUSTOMCOLOR
+            CUSTOMCOLOR = secondary_color
+            if secondary_color:
+                print(secondary_color)
+                for F in (StartPage, AccumulatorView):
+                    frame = F(main_frame, self)
+                    frame.config(bg=DEFAULTBACKGROUND)
+                    self.frames[F] = frame
+                    frame.grid(row=0, column=0, sticky="nsew")
+                self.show_frame(StartPage)
+
+        def newFile():
+            self.show_frame(StartPage)
+
+        my_menu = tk.Menu(self)
+        self.config(menu = my_menu)
+
+        option_menu = tk.Menu(my_menu, tearoff=0)
+        my_menu.add_cascade(label="Options", menu=option_menu)
+        option_menu.add_command(label="Change Primary Color", command=primaryColor)
+        option_menu.add_command(label="Change Secondary Color", command=secondaryColor)
+        option_menu.add_command(label="New File", command=newFile)
+        option_menu.add_separator()
+        option_menu.add_command(label="Exit App", command=self.quit)
 
     def show_frame(self, cont):
         frame = self.frames[cont]
@@ -99,13 +138,13 @@ class AccumulatorView(tk.Frame):
         self.IO_label.grid(row=0, column=0, padx=10, pady=10, columnspan=2)
 
         # Frames for file loading and IO operations
-        file_frame = tk.Frame(self, bg='grey', bd=2, relief='ridge')
+        file_frame = tk.Frame(self, bg=CUSTOMCOLOR, bd=2, relief='ridge')
         file_frame.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
-        file_frame.config(bg="gray8")
+        file_frame.config(bg=CUSTOMCOLOR)
 
-        io_frame = tk.Frame(self, bg='grey', bd=2, relief='ridge')
+        io_frame = tk.Frame(self, bg=CUSTOMCOLOR, bd=2, relief='ridge')
         io_frame.grid(row=1, column=1, padx=10, pady=5, sticky="nsew")
-        io_frame.config(bg="gray8")
+        io_frame.config(bg=CUSTOMCOLOR)
 
         # Set up grid weights for responsive resizing within frames
         file_frame.grid_rowconfigure(0, weight=1)
@@ -114,14 +153,14 @@ class AccumulatorView(tk.Frame):
         io_frame.grid_rowconfigure(0, weight=1)
         io_frame.grid_columnconfigure(0, weight=1)
 
-        input_frame = tk.Frame(io_frame, bg='grey', bd=2, relief='ridge')
+        input_frame = tk.Frame(io_frame, bg=CUSTOMCOLOR, bd=2, relief='ridge')
         input_frame.grid(row=0, column=0, padx=10, pady=5, sticky="nsew")
         input_frame.config(bg="gray")
         # Set up grid weights for responsive resizing
         input_frame.grid_rowconfigure(0, weight=1)
         input_frame.grid_columnconfigure(0, weight=1)
 
-        output_frame = tk.Frame(io_frame, bg='grey', bd=2, relief='ridge')
+        output_frame = tk.Frame(io_frame, bg=CUSTOMCOLOR, bd=2, relief='ridge')
         output_frame.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
         output_frame.config(bg="gray")
         # Set up grid weights for responsive resizing
@@ -137,7 +176,7 @@ class AccumulatorView(tk.Frame):
         self.file_name_label.grid(row=1, column=0, padx=10, pady=10, sticky="new")
 
         # Table frame for file editing
-        self.table_frame = tk.Frame(file_frame, bg='grey')
+        self.table_frame = tk.Frame(file_frame, bg=CUSTOMCOLOR)
         self.table_frame.grid(row=2, column=0)
        # Treeview widget for displaying and editing data
         self.tree = ttk.Treeview(self.table_frame, columns=('Data'), show='headings')
