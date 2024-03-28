@@ -39,6 +39,8 @@ class Memory:
         
     # Returns the value at the specified location in memory (mem_key)
     def read_memory(self, mem_key):
+        print(mem_key)
+        print(self.memory)
         return self.memory[mem_key]
 
     # Writes the value to the specified location in memory (mem_key)
@@ -46,10 +48,11 @@ class Memory:
         self.memory[mem_key] = val
 
     def format(self, instr):
+        print(instr)
         if instr[0] == '+':
              return int(str(instr[1])+str(instr[2]))
         elif instr[0] == '-':
-            return int('-'+str(instr[1])+str(instr[2]))
+            return int(str(instr[1])+str(instr[2]))
         else:
             return int(instr)
 
