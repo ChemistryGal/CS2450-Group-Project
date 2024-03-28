@@ -40,6 +40,8 @@ class tkinterApp(tk.Tk):
 
         self.show_frame(StartPage)
 
+
+        # Color Picker Code 
         def primaryColor():
             primary_color = colorchooser.askcolor()[1]
             global DEFAULTBACKGROUND
