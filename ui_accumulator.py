@@ -17,11 +17,11 @@ class tkinterApp(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
         self.title("UVsim")
         self.config(bg=DEFAULTBACKGROUND)
-        self.minsize(500, 500)
+        self.minsize(1000, 500)
 
         # Create a frame that will expand to fill the window
         main_frame = tk.Frame(self, bg='grey')
-        main_frame.pack(expand=True, fill='both')
+        main_frame.pack(expand=True, fill='both', padx=20, pady=20)
 
         # Set up grid weights for responsive resizing
         main_frame.grid_rowconfigure(0, weight=1)
@@ -89,7 +89,7 @@ class tkinterApp(tk.Tk):
         print("read callback executing inside Tkinterapp")
         frame = self.frames[AccumulatorView]
         frame.send_btn.config(state="normal")
-        messagebox.showinfo("Waiting for Input", "Please provide input.")
+        messagebox.showinfo("Waiting for Input", "Click \"Ok\" and enter a valid BasicML word")
         frame.tkraise()
 
     def output_trigger(self, output_msg: str):
@@ -167,17 +167,20 @@ class AccumulatorView(tk.Frame):
         output_frame.grid_rowconfigure(0, weight=1)
         output_frame.grid_columnconfigure(0, weight=1)
 
-        # Labels for file loading section
-        self.file_frame_label = ttk.Label(file_frame, text="File Manager", font=LARGEFONT)
-        self.file_frame_label.grid(row=0, column=0, padx=10, pady=10, sticky="new")
-
-        # Label to display selected file name
-        self.file_name_label = ttk.Label(file_frame, text="No File selected", font=SMALLFONT, justify="center")
-        self.file_name_label.grid(row=1, column=0, padx=10, pady=10, sticky="new")
+        # File manager inner frame on the left side
+        self.left_inner_frame = tk.Frame(file_frame, bg=CUSTOMCOLOR)
+        self.left_inner_frame.grid(row=2, column=0, padx=10, pady=10)
+        self.left_inner_frame.config(bg="gray")
+        self.left_inner_frame.grid_rowconfigure(0, weight=1)
+        self.left_inner_frame.grid_columnconfigure(0, weight=1)
 
         # Table frame for file editing
-        self.table_frame = tk.Frame(file_frame, bg=CUSTOMCOLOR)
+        self.table_frame = tk.Frame(self.left_inner_frame, bg=CUSTOMCOLOR)
         self.table_frame.grid(row=2, column=0)
+        self.table_frame.config(bg="gray")
+        self.table_frame.grid_rowconfigure(0, weight=1)
+        self.table_frame.grid_columnconfigure(0, weight=1)
+
        # Treeview widget for displaying and editing data
         self.tree = ttk.Treeview(self.table_frame, columns=('Data'), show='headings')
         self.tree.heading('Data', text='BasicML')
@@ -196,13 +199,29 @@ class AccumulatorView(tk.Frame):
 
         self.tree.bind("<Delete>", lambda event: self.item_delete(event=event, controller=controller))
 
+        # Labels for file loading section
+        self.file_frame_label = ttk.Label(self.left_inner_frame, text="File Editor/Manager", font=LARGEFONT)
+        self.file_frame_label.grid(row=0, column=0, padx=10, pady=10, sticky="new")
+
+        # Label to display selected file name
+        self.file_name_label = ttk.Label(self.left_inner_frame, text="No File selected", font=SMALLFONT, justify="center")
+        self.file_name_label.grid(row=1, column=0, padx=10, pady=10, sticky="new")
+
+        # Editor entry widget
+        self.editor_entry = tk.Text(self.table_frame)
+        self.editor_entry.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
+
         # Button to select and run the loaded file
-        self.run_button = ttk.Button(file_frame, text="Run File", command=lambda: self.run_file(controller))
+        self.run_button = ttk.Button(self.left_inner_frame, text="Run File", command=lambda: self.run_file(controller))
         self.run_button.grid(row=3, column=0, padx=10, pady=10, sticky="new")
 
         # Button to select and run the loaded file
-        self.new_file_btn = ttk.Button(file_frame, text="Load New", command=lambda: controller.load_file())
-        self.new_file_btn.grid(row=4, column=0, padx=10, pady=10, sticky="new")
+        self.new_file_btn = ttk.Button(self.left_inner_frame, text="Load New", command=lambda: controller.load_file())
+        self.new_file_btn.grid(row=3, column=1, padx=10, pady=10, sticky="new")
+
+        # Button to submit changed value
+        self.editor_btn = ttk.Button(self.left_inner_frame, text="Submit Changes", command=lambda: controller.load_file())
+        self.editor_btn.grid(row=4, column=0, padx=10, pady=10, sticky="new")
 
         # Labels and widgets for IO operations section
         self.IO_label = ttk.Label(input_frame, text="Input", font=LARGEFONT, background="gray")
@@ -216,17 +235,19 @@ class AccumulatorView(tk.Frame):
         self.send_btn.config(state="disabled")
 
         self.output_label = ttk.Label(output_frame, text="Output", font=LARGEFONT, justify="center")
-        self.output_label.grid(row=3, column=0, padx=10, pady=10, sticky="ew")
+        self.output_label.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
 
         self.output_text = ttk.Label(output_frame, text="", font=SMALLFONT, wraplength=500)
-        self.output_text.grid(row=4, column=0, padx=10, pady=10, sticky="ew")
+        self.output_text.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
 
         # Bind the <Return> key event to the run_file function
-        self.input_entry.bind("<Return>", lambda event: self.run_file(controller, event))
+        self.input_entry.bind("<Return>", lambda event: self.send_input(controller, event))
     
-    # def load_file(self, controller: tkinterApp ):
-    #     result = controller.UVsim.read_file(controller.file_path)
-    
+    def edit_text(self, event):
+        value = self.editor_entry.get()
+        # selected_item = 
+        
+
     def paste_text(event):
         widget = event.widget
         text = widget.clipboard_get()
