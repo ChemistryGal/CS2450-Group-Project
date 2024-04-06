@@ -195,7 +195,7 @@ class AccumulatorView(tk.Frame):
         if sys.platform == 'darwin':  # macOS
             self.tree.bind("<Command-c>", lambda event: self.copy_selection(event=event, controller=controller) )
         else:  # Windows and other platforms
-            self.tree.bind("<control-c>", lambda event: self.copy_selection(event=event, controller=controller) )
+            self.tree.bind("<Control-c>", lambda event: self.copy_selection(event=event, controller=controller) )
 
         self.tree.bind("<Delete>", lambda event: self.item_delete(event=event, controller=controller))
 
@@ -213,15 +213,19 @@ class AccumulatorView(tk.Frame):
 
         # Button to select and run the loaded file
         self.run_button = ttk.Button(self.left_inner_frame, text="Run File", command=lambda: self.run_file(controller))
-        self.run_button.grid(row=3, column=0, padx=10, pady=10, sticky="new")
+        self.run_button.grid(row=4, column=0, padx=10, pady=10, sticky="new")
+
+        # Button to submit changed value
+        self.editor_btn = ttk.Button(self.left_inner_frame, text="Submit Changes", command=lambda: self.updateTreeView(controller))
+        self.editor_btn.grid(row=3, column=0, padx=10, pady=10, sticky="new")
+
+        # Button to submit changed value
+        self.editor_btn = ttk.Button(self.left_inner_frame, text="Edit File", command=lambda: self.edit_file())
+        self.editor_btn.grid(row=3, column=1, padx=10, pady=10, sticky="new")
 
         # Button to select and run the loaded file
         self.new_file_btn = ttk.Button(self.left_inner_frame, text="Load New", command=lambda: controller.load_file())
-        self.new_file_btn.grid(row=3, column=1, padx=10, pady=10, sticky="new")
-
-        # Button to submit changed value
-        self.editor_btn = ttk.Button(self.left_inner_frame, text="Submit Changes", command=lambda: controller.load_file())
-        self.editor_btn.grid(row=4, column=0, padx=10, pady=10, sticky="new")
+        self.new_file_btn.grid(row=4, column=1, padx=10, pady=10, sticky="new")
 
         # Labels and widgets for IO operations section
         self.IO_label = ttk.Label(input_frame, text="Input", font=LARGEFONT, background="gray")
@@ -242,11 +246,50 @@ class AccumulatorView(tk.Frame):
 
         # Bind the <Return> key event to the run_file function
         self.input_entry.bind("<Return>", lambda event: self.send_input(controller, event))
-    
-    def edit_text(self, event):
-        value = self.editor_entry.get()
-        # selected_item = 
-        
+
+
+
+    def updateTreeView(self, controller:tkinterApp):
+        newValues = self.editor_entry.get("1.0", tk.END)
+        # split values on new line char
+        splitValues = newValues.split()
+        controller.file_contents = splitValues
+        self.update_table(controller)
+        self.editor_entry.delete("1.0", tk.END)
+
+
+    def edit_file(self):
+        tree_items = []
+        for idx, item in enumerate(self.tree.get_children()):
+            cleanItem = self.tree.item(item)["values"]
+            # print(cleanItem)
+            if cleanItem[0] == 0:
+                tree_items.append("+0000")
+            elif len(str(cleanItem[0])) < 4:
+                length = len(str(cleanItem[0]))
+                diff = 4 - length
+                newWord =   "+" + (diff * "0") + str(cleanItem[0])
+                tree_items.append(newWord)
+            else:
+                tree_items.append(f"+{cleanItem[0]}")
+            tree_items.append("\n")
+
+        tree_string = "".join(tree_items)
+        self.editor_entry.insert(tk.END, tree_string)
+
+        # self.editor_entry.config(text=tree_items)
+        self.editor_entry.bind('<Escape>', lambda event: self.cancel_editing(event))
+        # self.editor_entry.bind('<FocusOut>', lambda event: self.on_focus_out(event))  # Save changes on focus out
+
+
+    # def on_focus_out(self, event):
+    #     new_value = self.editor_entry.get()
+    #     self.tree.set(item, column, new_value)  # Set the new value to the cell
+    #     self.cancel_editing()  # Cancel editing mode
+
+
+    def cancel_editing(self, event):
+        self.editor_entry.delete("1.0", tk.END)
 
     def paste_text(event):
         widget = event.widget
@@ -279,9 +322,9 @@ class AccumulatorView(tk.Frame):
                 value = self.tree.item(each)["values"][column_no]
                 if value != 0:
                     if value > 0:
-                        self.tree.clipboard_append('+' + str(value))
+                        self.tree.clipboard_append('+' + str(value)+ "\n")
                     else:
-                        self.tree.clipboard_append('-' + str(value))
+                        self.tree.clipboard_append('-' + str(value)+ "\n")
                 else:
                     self.tree.clipboard_append("+0000")
             except:
@@ -331,7 +374,3 @@ class AccumulatorView(tk.Frame):
         for i, item in enumerate(data):
             self.tree.insert('', 'end', values=(item,))
 
-    def update_data(self, item, column):
-        new_value = self.entry.get()
-        self.tree.item(item, values=(new_value,))
-        self.entry.destroy()
