@@ -1,5 +1,6 @@
 import os
 import tkinter as tk
+from tkinter.filedialog import asksaveasfilename
 from tkinter import ttk, filedialog
 from UVsimulator import UVSimulator
 from tkinter import messagebox, colorchooser
@@ -18,6 +19,10 @@ class tkinterApp(tk.Tk):
         self.title("UVsim")
         self.config(bg=DEFAULTBACKGROUND)
         self.minsize(1000, 500)
+        if sys.platform == 'darwin':  # macOS
+            self.bind("<Command-s>", lambda event: self.save_file(event=event) )
+        else:  # Windows and other platforms
+            self.bind("<Control-s>", lambda event: self.save_file(event=event) )
 
         # Create a frame that will expand to fill the window
         main_frame = tk.Frame(self, bg='grey')
@@ -110,6 +115,17 @@ class tkinterApp(tk.Tk):
             self.frames[AccumulatorView].update_table(self)
 
             self.show_frame(AccumulatorView)
+
+    #Define the function
+    def save_file(self, event):
+        file_path = asksaveasfilename(initialfile = 'Untitled.txt', defaultextension=".txt",filetypes=[("All Files","*.*"),("Text Documents","*.txt")])
+        print(file_path)
+        if file_path:
+            with open(file_path, "w") as file:
+                for i in self.file_contents:
+                    file.write(i+"\n")
+                messagebox.showinfo("File successfully saved", message="File saved ")
+
 
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
