@@ -22,20 +22,34 @@ class Memory:
         f.close()
         return temp_memory
 
-    def load_memory(self, memory_list:list):
+    def process6files(self, memory_list: list):
         i = 0
-        while i < len(memory_list) and i < 100:
+        while i < len(memory_list) and i <= 250:
+                clean = memory_list[i].strip()
+                self.memory[i] = [clean[0:1], int(clean[1:4]), int(clean[4:7])]
+                i += 1
+        return clean
+
+    def process4to6files(self, memory_list: list):
+        i = 0
+        while i < len(memory_list) and i <= 100:
                 clean = memory_list[i].strip()
                 self.memory[i] = [clean[0:1], int(clean[1:3]), int(clean[3:5])]
                 i += 1
         return clean
-        # with open(file, "r") as f:
-        #     # print("load_memory")
-        #     for line in f:
-        #         # print("line: ", line)
 
-        # self.loc = 0
-        # f.close()
+    def load_memory(self, memory_list:list):
+        if len(memory_list[0]) == 7:
+             self.process6files(memory_list)
+        elif len(memory_list[0]) == 5:
+             self.process4to6files(memory_list)
+
+        # i = 0
+        # while i < len(memory_list) and i < 100:
+        #         clean = memory_list[i].strip()
+        #         self.memory[i] = [clean[0:1], int(clean[1:3]), int(clean[3:5])]
+        #         i += 1
+        # return clean
         
     # Returns the value at the specified location in memory (mem_key)
     def read_memory(self, mem_key):

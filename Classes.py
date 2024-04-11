@@ -28,7 +28,7 @@ class Control:
         new_loc = int(instr[2])
         if new_loc not in self.storage.memory.keys():
             print(f'Invalid memory location. Please check your file.')
-            self.storage.set_loc(101)
+            self.storage.set_loc(251)
         else:
             self.storage.set_loc(new_loc-1)
 
@@ -37,7 +37,7 @@ class Control:
         new_loc = int(instr[2])
         if new_loc not in self.storage.memory.keys():
             print(f'Invalid memory location. Please check your file.')
-            self.storage.set_loc(101)
+            self.storage.set_loc(251)
         elif self.storage.accumulator == 0:
             self.storage.set_loc(new_loc-1)
 
@@ -46,13 +46,13 @@ class Control:
         new_loc = int(instr[2])
         if new_loc not in self.storage.memory.keys():
             print(f'Invalid memory location. Please check your file.')
-            self.storage.set_loc(101)
+            self.storage.set_loc(251)
         elif self.storage.accumulator < 0:
             self.storage.set_loc(new_loc-1)
 
     def halt(self, instr):
         print(f"HAULT at memory location: {self.storage.loc}")
-        self.storage.loc = 101
+        self.storage.loc = 251
 
 
 class IO:
@@ -65,11 +65,11 @@ class IO:
             input_string = user_input
             if self.storage.check_valid_instruction(self.storage.read_memory(instruction[2])):
                 print("Oh no! You overwriting a memory location that has a valid instruction in it currently. Please review you txt file.")
-                self.storage.set_loc(101)
+                self.storage.set_loc(251)
             try:
                 # Attempt to convert input to an integer
                 if len(input_string) == 5:
-                    mem_value = [input_string[0], int(input_string[1:3]), int(input_string[3:5])]
+                    mem_value = [input_string[0], int(input_string[1:4]), int(input_string[3:7])]
                     mem_key = instruction[2]
                     # Input is valid; exit the loop
                     self.storage.write_memory(mem_key, mem_value)
@@ -103,7 +103,7 @@ class LS:
             self.storage.accumulator = self.storage.format(self.storage.memory[int_location])
 
         else:
-            self.storage.set_loc(101)
+            self.storage.set_loc(251)
             print(f'Memory location {int_location} is empty! Please review you txt file to make sure you are referencing the coprrect location.')
         # print(f"Loaded accumulator with value at memory location: {location} accumulator value: {self.storage.accumulator}")
 
@@ -192,10 +192,10 @@ class Arithmetic:
 
     def check_overflow(self, result):
         if len(str(result)) > 4 and result>0:
-            temp = str(result)[:4]
+            temp = str(result)[:6]
             self.storage.accumulator = int(temp)
         elif len(str(result)) > 4 and result<0:
-            temp = str(result)[:5]
+            temp = str(result)[:7]
             self.storage.accumulator = int(temp)
         else:
             self.storage.accumulator = result
