@@ -10,6 +10,16 @@ class Memory:
     def set_loc(self, new_loc):
         self.loc = new_loc
 
+    def four_to_six_formatting(self,value):
+        break_up = [value[0:1], int(value[1:3]), int(value[3:5])]
+        if self.check_valid_instruction(break_up):
+            new_value = f'{value[0:1]}0{str(value[1:3])}0{str(value[3:5])}'
+            return new_value
+        else:
+            new_value = f'{value[0:1]}00{str(value[1:])}'
+            return new_value
+        
+
     def read_file(self, file) -> list:
         if file == None:
             return 1
@@ -18,6 +28,8 @@ class Memory:
             for line in f:
                 print(line)
                 clean = line.strip()
+                if len(clean)<7:
+                    clean = self.four_to_six_formatting(clean)
                 temp_memory.append(clean)
         f.close()
         return temp_memory
@@ -26,23 +38,13 @@ class Memory:
         i = 0
         while i < len(memory_list) and i <= 250:
                 clean = memory_list[i].strip()
-                self.memory[i] = [clean[0:1], int(clean[1:4]), int(clean[4:7])]
-                i += 1
-        return clean
-
-    def process4to6files(self, memory_list: list):
-        i = 0
-        while i < len(memory_list) and i <= 100:
-                clean = memory_list[i].strip()
-                self.memory[i] = [clean[0:1], int(clean[1:3]), int(clean[3:5])]
+                self.memory[i] = [clean[0:1], int(clean[1:4]), int(clean[5:])]
                 i += 1
         return clean
 
     def load_memory(self, memory_list:list):
         if len(memory_list[0]) == 7:
              self.process6files(memory_list)
-        elif len(memory_list[0]) == 5:
-             self.process4to6files(memory_list)
 
         # i = 0
         # while i < len(memory_list) and i < 100:

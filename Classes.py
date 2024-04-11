@@ -68,8 +68,8 @@ class IO:
                 self.storage.set_loc(251)
             try:
                 # Attempt to convert input to an integer
-                if len(input_string) == 5:
-                    mem_value = [input_string[0], int(input_string[1:4]), int(input_string[3:7])]
+                if len(input_string) == 7:
+                    mem_value = [input_string[0], int(input_string[1:4]), int(input_string[4:7])]
                     mem_key = instruction[2]
                     # Input is valid; exit the loop
                     self.storage.write_memory(mem_key, mem_value)
@@ -78,7 +78,7 @@ class IO:
                     raise ValueError  # Input is not within the valid range
             except ValueError:
                 # This block executes if the input is not a valid integer or not in the range
-                print("Invalid input. Please enter a signed four-digit number.")
+                print("Invalid input. Please enter a signed six-digit number.")
                 return self.read
             
 
@@ -119,7 +119,8 @@ class LS:
                 self.storage.memory[int_location] = ["+"]
             
             # Turn data into a string 
-            # self.storage.
+            # self.storage
+            # Katie Implementation
             
             # Get the number of digits in the integer
             num_digits = len(str(self.storage.accumulator))
@@ -191,10 +192,10 @@ class Arithmetic:
         # print(f"Multiplied accumulator value: {self.storage.accumulator}")
 
     def check_overflow(self, result):
-        if len(str(result)) > 4 and result>0:
+        if len(str(result)) > 6 and result > 0:
             temp = str(result)[:6]
             self.storage.accumulator = int(temp)
-        elif len(str(result)) > 4 and result<0:
+        elif len(str(result)) > 6 and result < 0:
             temp = str(result)[:7]
             self.storage.accumulator = int(temp)
         else:

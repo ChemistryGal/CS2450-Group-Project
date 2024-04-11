@@ -20,7 +20,7 @@ class tkinterApp(tk.Tk):
         self.minsize(1000, 500)
 
         # Create a frame that will expand to fill the window
-        main_frame = tk.Frame(self, bg='grey')
+        main_frame = tk.Frame(self, bg=DEFAULTBACKGROUND)
         main_frame.pack(expand=True, fill='both', padx=20, pady=20)
 
         # Set up grid weights for responsive resizing
