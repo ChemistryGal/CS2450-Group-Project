@@ -166,6 +166,16 @@ class TabsPage(tk.Frame):
             self.frames[AccumulatorView].update_table(self)
             self.show_frame(AccumulatorView)
 
+    #Define the function
+    def save_file(self, event):
+        file_path = asksaveasfilename(initialfile = 'Untitled.txt', defaultextension=".txt",filetypes=[("All Files","*.*"),("Text Documents","*.txt")])
+        print(file_path)
+        if file_path:
+            with open(file_path, "w") as file:
+                for i in self.file_contents:
+                    file.write(i+"\n")
+                messagebox.showinfo("File successfully saved", message="File saved ")
+
 class AccumulatorView(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -256,7 +266,7 @@ class AccumulatorView(tk.Frame):
         self.editor_entry.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
 
         # Button for saving file
-        self.save_file = ttk.Button(self.table_frame, text="Save File", command=self.save_file)
+        self.save_file = ttk.Button(self.table_frame, text="Save File", command=lambda: controller.save_file())
         self.save_file.grid(row = 3, column=1, padx=10, pady=10, sticky="new", rowspan=2)
 
         # Button to select and run the loaded file
@@ -294,9 +304,6 @@ class AccumulatorView(tk.Frame):
 
         # Bind the <Return> key event to the run_file function
         self.input_entry.bind("<Return>", lambda event: self.send_input(controller, event))
-
-    def save_file(self):
-        pass
 
     def on_resize(self, event):
         # Display the current size of the window in the label
