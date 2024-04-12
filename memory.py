@@ -24,6 +24,7 @@ class Memory:
 
     def load_memory(self, memory_list:list):
         i = 0
+        clean = []
         while i < len(memory_list) and i < 100:
                 clean = memory_list[i].strip()
                 self.memory[i] = [clean[0:1], int(clean[1:3]), int(clean[3:5])]
