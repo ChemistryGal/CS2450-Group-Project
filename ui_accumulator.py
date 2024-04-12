@@ -51,7 +51,7 @@ class tkinterApp(tk.Tk):
                     frame.config(bg=DEFAULTBACKGROUND)
                     self.frames[F] = frame
                     frame.grid(row=0, column=0, sticky="nsew")
-                self.show_frame(StartPage)
+                #self.show_frame(StartPage)
 
         def secondaryColor():
             secondary_color = colorchooser.askcolor()[1]
@@ -64,10 +64,7 @@ class tkinterApp(tk.Tk):
                     frame.config(bg=DEFAULTBACKGROUND)
                     self.frames[F] = frame
                     frame.grid(row=0, column=0, sticky="nsew")
-                self.show_frame(StartPage)
-
-        def newFile():
-            self.show_frame(StartPage)
+                #self.show_frame(StartPage)
 
         my_menu = tk.Menu(self)
         self.config(menu = my_menu)
@@ -76,7 +73,6 @@ class tkinterApp(tk.Tk):
         my_menu.add_cascade(label="Options", menu=option_menu)
         option_menu.add_command(label="Change Primary Color", command=primaryColor)
         option_menu.add_command(label="Change Secondary Color", command=secondaryColor)
-        option_menu.add_command(label="New File", command=newFile)
         option_menu.add_separator()
         option_menu.add_command(label="Exit App", command=self.quit)
 
@@ -155,14 +151,14 @@ class AccumulatorView(tk.Frame):
 
         input_frame = tk.Frame(io_frame, bg=CUSTOMCOLOR, bd=2, relief='ridge')
         input_frame.grid(row=0, column=0, padx=10, pady=5, sticky="nsew")
-        input_frame.config(bg="gray")
+        input_frame.config(bg=CUSTOMCOLOR)
         # Set up grid weights for responsive resizing
         input_frame.grid_rowconfigure(0, weight=1)
         input_frame.grid_columnconfigure(0, weight=1)
 
         output_frame = tk.Frame(io_frame, bg=CUSTOMCOLOR, bd=2, relief='ridge')
         output_frame.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
-        output_frame.config(bg="gray")
+        output_frame.config(bg=CUSTOMCOLOR)
         # Set up grid weights for responsive resizing
         output_frame.grid_rowconfigure(0, weight=1)
         output_frame.grid_columnconfigure(0, weight=1)
@@ -170,14 +166,14 @@ class AccumulatorView(tk.Frame):
         # File manager inner frame on the left side
         self.left_inner_frame = tk.Frame(file_frame, bg=CUSTOMCOLOR)
         self.left_inner_frame.grid(row=2, column=0, padx=10, pady=10)
-        self.left_inner_frame.config(bg="gray")
+        self.left_inner_frame.config(bg=CUSTOMCOLOR)
         self.left_inner_frame.grid_rowconfigure(0, weight=1)
         self.left_inner_frame.grid_columnconfigure(0, weight=1)
 
         # Table frame for file editing
         self.table_frame = tk.Frame(self.left_inner_frame, bg=CUSTOMCOLOR)
         self.table_frame.grid(row=2, column=0)
-        self.table_frame.config(bg="gray")
+        self.table_frame.config(bg=CUSTOMCOLOR)
         self.table_frame.grid_rowconfigure(0, weight=1)
         self.table_frame.grid_columnconfigure(0, weight=1)
 
@@ -228,7 +224,7 @@ class AccumulatorView(tk.Frame):
         self.new_file_btn.grid(row=4, column=1, padx=10, pady=10, sticky="new")
 
         # Labels and widgets for IO operations section
-        self.IO_label = ttk.Label(input_frame, text="Input", font=LARGEFONT, background="gray")
+        self.IO_label = ttk.Label(input_frame, text="Input", font=LARGEFONT, background=CUSTOMCOLOR)
         self.IO_label.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
 
         self.input_entry = ttk.Entry(input_frame)
@@ -264,7 +260,7 @@ class AccumulatorView(tk.Frame):
             cleanItem = self.tree.item(item)["values"]
             # print(cleanItem)
             if cleanItem[0] == 0:
-                tree_items.append("+0000")
+                tree_items.append("+000000")
             elif len(str(cleanItem[0])) < 4:
                 length = len(str(cleanItem[0]))
                 diff = 4 - length
