@@ -23,9 +23,20 @@ class tkinterApp(tk.Tk):
         self.add_tab_button = ttk.Button(self, text="Add Tab", command=self.add_tab)
         self.add_tab_button.pack(side='left', padx=10, pady=10)
 
+
         # Notebook that will hold tabs
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(expand=True, fill='both', pady=20, padx=10)
+
+        # Add window size label
+        self.label = tk.Label(self, text="Window size: 500x500")
+        self.label.pack(side="bottom", padx=0, pady=3)
+        
+        # Bind the resize event
+        self.bind("<Configure>", lambda event: self.on_resize(event))
+
+        # Add an Initial Tab to Start with
+        self.add_tab()
 
         # Menu bar setup
         my_menu = tk.Menu(self)
@@ -37,6 +48,15 @@ class tkinterApp(tk.Tk):
         option_menu.add_command(label="New File", command= lambda :self.new_file())
         option_menu.add_separator()
         option_menu.add_command(label="Exit App", command=self.quit)
+
+    def on_resize(self, event):
+        # Display the current size of the window in the label
+        self.label.config(text=f"Window size: {self.winfo_width()}x{self.winfo_height()}")
+        # Adjust layout or other elements based on the size
+        if self.winfo_width() < 400 or self.winfo_height() < 200:
+            self.label.config(bg='red', fg='white')
+        else:
+            self.label.config(bg='black', fg='white')
 
     def add_tab(self):
         # Create a new TabsPage frame (assumed to be defined elsewhere)
@@ -91,6 +111,15 @@ class TabsPage(tk.Frame):
 
         # Raise the AccumulatorView
         self.show_frame(AccumulatorView)
+        
+    def on_resize(self, event):
+        # Display the current size of the window in the label
+        self.label.config(text=f"Window size: {self.winfo_width()}x{self.winfo_height()}")
+        # Adjust layout or other elements based on the size
+        if self.winfo_width() < 400 or self.winfo_height() < 200:
+            self.label.config(bg='red', fg='white')
+        else:
+            self.label.config(bg='black', fg='white')
 
     def build_AccumulatorView(self, frame: tk.Frame ):
         frame = AccumulatorView(frame, self)  # Ensure these classes are designed to accept these arguments
@@ -106,14 +135,13 @@ class TabsPage(tk.Frame):
     def get_input(self):
         # Simplified callback function for read
         print("Read callback executing inside TabsPage")
-        frame = self.frames[AccumulatorView]
         messagebox.showinfo("Waiting for Input", "Click \"Ok\" and enter a valid BasicML word")
-        frame.tkraise()
+        self.frames[AccumulatorView].send_btn.config(state="enabled")
 
     def output_trigger(self, output_msg: str):
         # Callback function for output
         frame = self.frames[AccumulatorView]
-        frame.update_output(output_msg)
+        frame.update_output(self, output_msg)
         frame.tkraise()
 
     def update_tab_title(self, new_title):
@@ -205,19 +233,26 @@ class AccumulatorView(tk.Frame):
         else:  # Windows and other platforms
             self.tree.bind("<Control-c>", lambda event: self.copy_selection(event=event, controller=controller) )
 
-        self.tree.bind("<Delete>", lambda event: self.item_delete(event=event, controller=controller))
+        if sys.platform == "darwin":  # Darwin indicates macOS
+            self.tree.bind("<BackSpace>", lambda event: self.item_delete(event=event, controller=controller))
+        else:
+            self.tree.bind("<Delete>", lambda event: self.item_delete(event=event, controller=controller))
 
         # Labels for file loading section
         self.file_frame_label = ttk.Label(self.left_inner_frame, text="File Editor/Manager", font=LARGEFONT)
         self.file_frame_label.grid(row=0, column=0, padx=10, pady=10, sticky="new")
 
         # Label to display selected file name
-        self.file_name_label = ttk.Label(self.left_inner_frame, text="No File selected", font=SMALLFONT, justify="center")
+        self.file_name_label = ttk.Label(self.left_inner_frame, text="File Name: No File selected", font=SMALLFONT, justify="center")
         self.file_name_label.grid(row=1, column=0, padx=10, pady=10, sticky="new")
 
         # Editor entry widget
         self.editor_entry = tk.Text(self.table_frame)
         self.editor_entry.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
+
+        # Button for saving file
+        self.save_file = ttk.Button(self.table_frame, text="Save File", command=self.save_file)
+        self.save_file.grid(row = 3, column=1, padx=10, pady=10, sticky="new", rowspan=2)
 
         # Button to select and run the loaded file
         self.run_button = ttk.Button(self.left_inner_frame, text="Run File", command=lambda: self.run_file(controller))
@@ -232,7 +267,7 @@ class AccumulatorView(tk.Frame):
         self.editor_btn.grid(row=3, column=1, padx=10, pady=10, sticky="new")
 
         # Button to select and run the loaded file
-        self.new_file_btn = ttk.Button(self.left_inner_frame, text="Load New", command=lambda: controller.load_file())
+        self.new_file_btn = ttk.Button(self.left_inner_frame, text="Load", command=lambda: controller.load_file())
         self.new_file_btn.grid(row=4, column=1, padx=10, pady=10, sticky="new")
 
         # Labels and widgets for IO operations section
@@ -244,7 +279,7 @@ class AccumulatorView(tk.Frame):
 
         self.send_btn= ttk.Button(input_frame, text="Resume Execution", command=lambda: self.send_input(controller))
         self.send_btn.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
-        self.send_btn.config(state="disabled")
+        self.send_btn.config(state="disabled") 
 
         self.output_label = ttk.Label(output_frame, text="Output", font=LARGEFONT, justify="center")
         self.output_label.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
@@ -255,13 +290,33 @@ class AccumulatorView(tk.Frame):
         # Bind the <Return> key event to the run_file function
         self.input_entry.bind("<Return>", lambda event: self.send_input(controller, event))
 
+    def save_file(self):
+        pass
+
+    def on_resize(self, event):
+        # Display the current size of the window in the label
+        label.config(text=f"Window size: {event.width}x{event.height}")
+        # Adjust layout or other elements based on the size
+        if event.width < 400 or event.height < 200:
+            label.config(bg='red', fg='white')
+        else:
+            label.config(bg='green', fg='black')
+
     def updateTreeView(self, controller:tkinterApp):
-        newValues = self.editor_entry.get("1.0", tk.END)
-        # split values on new line char
-        splitValues = newValues.split()
-        controller.file_contents = splitValues
-        self.update_table(controller)
-        self.editor_entry.delete("1.0", tk.END)
+        if self.fileContents(controller=controller) or self.editor_entry.get("1.0", tk.END).strip() != "":
+            newValues = self.editor_entry.get("1.0", tk.END)
+            response = messagebox.askyesno("Confirm Overwrite", "Are you sure you want to overwrite the file?")
+            if response:
+                print("User chose to overwrite the file.")
+                # split values on new line char
+                splitValues = newValues.split()
+                controller.file_contents = splitValues
+                self.update_table(controller)
+                self.editor_entry.delete("1.0", tk.END)
+            else:
+                print("User canceled the overwrite.")
+        else:
+            messagebox.showinfo("File contents Empty", "Click the \"Load\" button to load a file OR enter custome BasicML.")
 
     def edit_file(self):
         tree_items = []
@@ -285,7 +340,6 @@ class AccumulatorView(tk.Frame):
         # self.editor_entry.config(text=tree_items)
         self.editor_entry.bind('<Escape>', lambda event: self.cancel_editing(event))
         # self.editor_entry.bind('<FocusOut>', lambda event: self.on_focus_out(event))  # Save changes on focus out
-
 
     def cancel_editing(self, event):
         self.editor_entry.delete("1.0", tk.END)
@@ -329,14 +383,14 @@ class AccumulatorView(tk.Frame):
             # print(each)
         print(self.tree.clipboard_get())
 
-
     def run_file(self, controller: tkinterApp, event=None):
-        self.output_text.config(text="")
-        self.get_table_data(controller=controller)
-        result = controller.UVsim.load_program(controller.file_contents)
-        controller.UVsim.run_program(read_callback=controller.get_input, write_callback=controller.output_trigger)
-        if result == 1:
-            controller.show_frame(StartPage)
+        if self.fileContents(controller=controller):
+            self.output_text.config(text="")
+            self.get_table_data(controller=controller)
+            result = controller.UVsim.load_program(controller.file_contents)
+            controller.UVsim.run_program(read_callback=controller.get_input, write_callback=controller.output_trigger)
+        else:
+            messagebox.showinfo("File contents Empty", "Click the \"Load\" button to load a file OR enter custome BasicML.")
 
     def get_table_data(self, controller):
         result = self.table_frame.winfo_children()
@@ -357,7 +411,9 @@ class AccumulatorView(tk.Frame):
         controller.UVsim.resume_execution()
 
     def send_input(self, controller:TabsPage):
+        print("sending input")
         input = self.input_entry.get()
+        print(f"input: {input}")
         self.send_btn.config(state="disabled")
         controller.UVsim.resume_execution(input)
 
@@ -371,3 +427,9 @@ class AccumulatorView(tk.Frame):
         for i, item in enumerate(data):
             self.tree.insert('', 'end', values=(item,))
 
+    def fileContents(self, controller) -> bool:
+        # checks if the file contents is Empty
+        if len(controller.file_contents) == 0:
+            controller.file_path = None
+            return False
+        return True

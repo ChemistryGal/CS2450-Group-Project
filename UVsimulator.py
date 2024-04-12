@@ -26,6 +26,7 @@ class UVSimulator:
         return self.memory.memory
     
     def resume_execution(self, input_instruction = None):
+        print("resumming execution")
         self.waiting_io = False
         # if input_instruction is not None:
         #     int_instruction = [input_instruction[0], int(input_instruction[1:3]), int(input_instruction[3:5])]
