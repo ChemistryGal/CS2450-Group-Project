@@ -99,6 +99,11 @@ class TabsPage(tk.Frame):
         main_frame = tk.Frame(self, bg='grey')
         main_frame.pack(expand=True, fill='both', padx=20, pady=20)
 
+        if sys.platform == 'darwin':  # macOS
+            self.bind("<Command-s>", lambda event: self.save_file(event=event) )
+        else:  # Windows and other platforms
+            self.bind("<Control-s>", lambda event: self.save_file(event=event) )
+            
         # Set up grid weights for responsive resizing
         main_frame.grid_rowconfigure(0, weight=1)
         main_frame.grid_columnconfigure(0, weight=1)
