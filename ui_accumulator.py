@@ -1,6 +1,7 @@
 import os
 import tkinter as tk
 from tkinter import ttk, filedialog
+from tkinter.filedialog import asksaveasfilename
 from UVsimulator import UVSimulator
 from tkinter import messagebox, colorchooser
 import sys
@@ -111,6 +112,7 @@ class TabsPage(tk.Frame):
         # Variables for operations
         self.frames = self.build_AccumulatorView(main_frame)
         self.UVsim = UVSimulator()
+        self.full_file_path = None
         self.file_path = None
         self.file_contents = []
 
@@ -157,6 +159,7 @@ class TabsPage(tk.Frame):
     def load_file(self):
         file_path = filedialog.askopenfilename(title="Select a file")
         if file_path:
+            self.full_file_path = file_path
             file_name = file_path.split("/")[-1]
             self.update_tab_title(file_name)
             self.file_path = file_path
@@ -167,14 +170,17 @@ class TabsPage(tk.Frame):
             self.show_frame(AccumulatorView)
 
     #Define the function
-    def save_file(self, event):
-        file_path = asksaveasfilename(initialfile = 'Untitled.txt', defaultextension=".txt",filetypes=[("All Files","*.*"),("Text Documents","*.txt")])
-        print(file_path)
-        if file_path:
-            with open(file_path, "w") as file:
-                for i in self.file_contents:
-                    file.write(i+"\n")
-                messagebox.showinfo("File successfully saved", message="File saved ")
+    def save_file(self):
+        if self.file_contents != []:
+            file_path = asksaveasfilename(initialfile = 'Untitled.txt', defaultextension=".txt",filetypes=[("All Files","*.*"),("Text Documents","*.txt")])
+            print(file_path)
+            if file_path:
+                with open(file_path, "w") as file:
+                    for i in self.file_contents:
+                        file.write(i+"\n")
+                    messagebox.showinfo("File successfully saved", message="File saved ")
+        else:
+            messagebox.showinfo("Missing File", "Load a file, edit, and then save")
 
 class AccumulatorView(tk.Frame):
     def __init__(self, parent, controller):
