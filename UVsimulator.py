@@ -53,11 +53,15 @@ class UVSimulator:
                 least_significant_digits = str(self.memory.memory[self.memory.read_memory(self.memory.loc - 1)[2]][2])
 
                 if len(most_significant_digits) < 2:     
+                    output_msg = "00" + most_significant_digits
+                elif len(most_significant_digits) < 3:
                     output_msg = "0" + most_significant_digits
                 else:
                     output_msg = most_significant_digits
                 
                 if len(least_significant_digits) < 2:     
+                    output_msg += "00" + least_significant_digits
+                elif len(least_significant_digits) < 3:
                     output_msg += "0" + least_significant_digits
                 else:
                     output_msg += least_significant_digits

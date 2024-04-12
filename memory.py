@@ -68,7 +68,7 @@ class Memory:
         if instr[0] == '+':
              return int(str(instr[1])+str(instr[2]))
         elif instr[0] == '-':
-            return int(str(instr[1])+str(instr[2]))
+            return int('-'+str(instr[1])+str(instr[2]))
         else:
             return int(instr)
 

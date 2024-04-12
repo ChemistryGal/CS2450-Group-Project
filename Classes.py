@@ -121,27 +121,47 @@ class LS:
             # Turn data into a string 
             # self.storage
             # Katie Implementation
-            
+            if self.storage.accumulator < 1000:
+                self.storage.memory[int_location].append(0)
+                self.storage.memory[int_location].append(int(self.storage.accumulator))
+            elif self.storage.accumulator < 10000:
+                temp = str(self.storage.accumulator)
+                first_chunk = int(temp[0])
+                second_chunk = int(temp[1:])
+                self.storage.memory[int_location].append(first_chunk)
+                self.storage.memory[int_location].append(second_chunk)
+            elif self.storage.accumulator < 100000:
+                temp = str(self.storage.accumulator)
+                first_chunk = int(temp[0:2])
+                second_chunk = int(temp[2:])
+                self.storage.memory[int_location].append(first_chunk)
+                self.storage.memory[int_location].append(second_chunk)
+            elif self.storage.accumulator < 1000000:
+                temp = str(self.storage.accumulator)
+                first_chunk = int(temp[0:3])
+                second_chunk = int(temp[3:])
+                self.storage.memory[int_location].append(first_chunk)
+                self.storage.memory[int_location].append(second_chunk)
             # Get the number of digits in the integer
-            num_digits = len(str(self.storage.accumulator))
+            # num_digits = len(str(self.storage.accumulator))
 
-            if num_digits > 2:
-                # Calculate divisor to isolate first two digits
-                divisor = 10 ** (num_digits - 2)
+            # if num_digits > 2:
+            #     # Calculate divisor to isolate first two digits
+            #     divisor = 10 ** (num_digits - 2)
 
-                # Extract the first two digits
-                first_two = self.storage.accumulator // divisor
+            #     # Extract the first two digits
+            #     first_two = self.storage.accumulator // divisor
 
-                if num_digits < 4:
-                    least_significant = self.storage.accumulator % 10
-                else:
-                    least_significant = self.storage.accumulator % 100
-            else:
-                first_two = 0
-                least_significant = self.storage.accumulator
+            #     if num_digits < 4:
+            #         least_significant = self.storage.accumulator % 10
+            #     else:
+            #         least_significant = self.storage.accumulator % 100
+            # else:
+            #     first_two = 0
+            #     least_significant = self.storage.accumulator
 
-            self.storage.memory[int_location].append(int(first_two))
-            self.storage.memory[int_location].append(least_significant)
+            # self.storage.memory[int_location].append(int(first_two))
+            # self.storage.memory[int_location].append(least_significant)
             
         # print(f"Stored {self.storage.accumulator} at location {location}")
 
