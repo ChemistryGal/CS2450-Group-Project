@@ -31,7 +31,7 @@ There is an options menu in the top left that will allow you to change the backg
 menu. Below is a video showing how everything works!
 
 ## Video
-[<img src="https://i.ytimg.com/vi/Hc79sDi3f0U/maxresdefault.jpg" width="50%">](https://www.youtube.com/watch?v=Hc79sDi3f0U "Now in Android: 55")
+[<img src="https://i.ytimg.com/vi/Hc79sDi3f0U/maxresdefault.jpg" width="50%">]([https://www.youtube.com/watch?v=Hc79sDi3f0U](https://youtu.be/RApcH3Yic7Y) "Test Video")
 
 ## Example Input File
 
