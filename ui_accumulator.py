@@ -244,7 +244,7 @@ class AccumulatorView(tk.Frame):
        # Treeview widget for displaying and editing data
         self.tree = ttk.Treeview(self.table_frame, columns=('Data'), show='headings')
         self.tree.heading('Data', text='BasicML')
-        self.tree.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        self.tree.grid(row=0, column=0, padx=10, pady=10, sticky="new")
 
         self.tree.bind("<<TreeviewSelect>>", lambda event: self.item_select(event=event, controller=controller))
         if sys.platform == 'darwin':  # macOS
@@ -273,6 +273,7 @@ class AccumulatorView(tk.Frame):
         # Editor entry widget
         self.editor_entry = tk.Text(self.table_frame)
         self.editor_entry.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
+        self.editor_entry.config(width=30, height=16)
 
         # Button for saving file
         self.save_file = ttk.Button(self.table_frame, text="Save File", command=lambda: controller.save_file())
@@ -283,8 +284,8 @@ class AccumulatorView(tk.Frame):
         self.run_button.grid(row=4, column=0, padx=10, pady=10, sticky="new")
 
         # Button to submit changed value
-        self.editor_btn = ttk.Button(self.left_inner_frame, text="Submit Changes", command=lambda: self.updateTreeView(controller))
-        self.editor_btn.grid(row=3, column=0, padx=10, pady=10, sticky="new")
+        self.submit_btn = ttk.Button(self.left_inner_frame, text="Submit Changes", command=lambda: self.updateTreeView(controller))
+        self.submit_btn.grid(row=3, column=0, padx=10, pady=10, sticky="new")
 
         # Button to submit changed value
         self.editor_btn = ttk.Button(self.left_inner_frame, text="Edit File", command=lambda: self.edit_file())
@@ -356,10 +357,10 @@ class AccumulatorView(tk.Frame):
             cleanItem = self.tree.item(item)["values"]
             # print(cleanItem)
             if cleanItem[0] == 0:
-                tree_items.append("+0000")
-            elif len(str(cleanItem[0])) < 4:
+                tree_items.append("+000000")
+            elif len(str(cleanItem[0])) < 6:
                 length = len(str(cleanItem[0]))
-                diff = 4 - length
+                diff = 6 - length
                 newWord =   "+" + (diff * "0") + str(cleanItem[0])
                 tree_items.append(newWord)
             else:
