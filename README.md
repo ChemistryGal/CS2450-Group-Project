@@ -33,7 +33,7 @@ menu. Below is a video showing how everything works!
 You can also use the command or control keys to copy and paste items to the editor. If you would like to copy multiple values just hold down the control or command key and select each of the values you'd like to copy. The same works for deleting values.
 
 ## Video
-[<img src="https://i9.ytimg.com/vi_webp/RApcH3Yic7Y/mq2.webp?sqp=COC-6LAG-oaymwEmCMACELQB8quKqQMa8AEB-AGuCYAC0AWKAgwIABABGGUgZShlMA8=&rs=AOn4CLB1eHEtxyw_6M3iEBsX46gNxpFGCQ" width="50%">](https://youtu.be/RApcH3Yic7Y "Test Video")
+[<img src="https://i9.ytimg.com/vi/CktHo5eETc4/mq1.jpg?sqp=CLjD6LAG&rs=AOn4CLDr35kYmbdD7w8IBKmx72RI0TK2eA&retry=2" width="50%">](https://youtu.be/CktHo5eETc4 "Test Video")
 
 ## Example Input File
 
