@@ -31,7 +31,7 @@ There is an options menu in the top left that will allow you to change the backg
 menu. Below is a video showing how everything works!
 
 ## Video
-[<img src="[https://i.ytimg.com/vi/Hc79sDi3f0U/maxresdefault.jpg](https://i9.ytimg.com/vi_webp/RApcH3Yic7Y/mq2.webp?sqp=CLS86LAG-oaymwEmCMACELQB8quKqQMa8AEB-AGuCYAC0AWKAgwIABABGGUgZShlMA8=&rs=AOn4CLDTayANlKBXS2ksTcvUMAcdZ3B_4w)" width="50%">]([https://www.youtube.com/watch?v=Hc79sDi3f0U](https://youtu.be/RApcH3Yic7Y) "Test Video")
+[<img src="https://i9.ytimg.com/vi_webp/RApcH3Yic7Y/mq2.webp?sqp=COC-6LAG-oaymwEmCMACELQB8quKqQMa8AEB-AGuCYAC0AWKAgwIABABGGUgZShlMA8=&rs=AOn4CLB1eHEtxyw_6M3iEBsX46gNxpFGCQ" width="50%">](https://youtu.be/RApcH3Yic7Y "Test Video")
 
 ## Example Input File
 
