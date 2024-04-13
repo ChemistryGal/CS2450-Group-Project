@@ -37,15 +37,15 @@ menu. Below is a video showing how everything works!
 Here's a small example of what your input file should look like. Ensure that your file includes a halt instruction (4300).
 
 ```assembly
-+1007
-+1008
-+2007
-+2008
-+2109
-+1109
-+4300
-+0000
-+0000
-+0000
++010007
++010008
++020007
++020008
++021009
++011009
++043000
++000000
++000000
++000000
 ```
 
