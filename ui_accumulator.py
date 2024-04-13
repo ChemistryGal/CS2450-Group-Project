@@ -11,7 +11,7 @@ LARGEFONT = ("Verdana", 20)
 SMALLFONT = ("Verdana", 10)
 
 DEFAULTBACKGROUND = "#4c721d"
-CUSTOMCOLOR = "#FFFFFF"
+CUSTOMCOLOR = "gray"
 
 class tkinterApp(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -23,7 +23,6 @@ class tkinterApp(tk.Tk):
         # Button to add new tabs
         self.add_tab_button = ttk.Button(self, text="Add Tab", command=self.add_tab)
         self.add_tab_button.pack(side='left', padx=10, pady=10)
-
 
         # Notebook that will hold tabs
         self.notebook = ttk.Notebook(self)
@@ -62,43 +61,41 @@ class tkinterApp(tk.Tk):
     def add_tab(self):
         # Create a new TabsPage frame (assumed to be defined elsewhere)
         frame = TabsPage(self.notebook)
+        frame.config(bg=DEFAULTBACKGROUND)
         self.notebook.add(frame, text="New Tab")
+        TabsPage.observers.append(frame)
 
     def change_primary_color(self):
         primary_color = colorchooser.askcolor()[1]
         global DEFAULTBACKGROUND
         DEFAULTBACKGROUND = primary_color
         if primary_color:
-            for F in (StartPage, AccumulatorView):
-                frame = F(main_frame, self)
-                frame.config(bg=DEFAULTBACKGROUND)
-                self.frames[F] = frame
-                frame.grid(row=0, column=0, sticky="nsew")
-            self.show_frame(StartPage)
+            self.config(bg=DEFAULTBACKGROUND)
+            TabsPage.change_background_color()
 
     def change_secondary_color(self):
         secondary_color = colorchooser.askcolor()[1]
         global CUSTOMCOLOR
         CUSTOMCOLOR = secondary_color
         if secondary_color:
-            print(secondary_color)
-            for F in (StartPage, AccumulatorView):
-                frame = F(main_frame, self)
-                frame.config(bg=DEFAULTBACKGROUND)
-                self.frames[F] = frame
-                frame.grid(row=0, column=0, sticky="nsew")
-            self.show_frame(StartPage)
-
-    def new_file(self):
-        self.show_frame(StartPage)
+            self.config(bg=DEFAULTBACKGROUND)
+            TabsPage.change_background_color()
 
 class TabsPage(tk.Frame):
+    observers = []
+
+    @classmethod
+    def change_background_color(cls):
+        for observer in cls.observers:
+            observer.update_color()
+
     def __init__(self, parent):
         super().__init__(parent)  # Using super for clean inheritance
         self.notebook = parent
         # Create a frame that will expand to fill the window
-        main_frame = tk.Frame(self, bg='grey')
-        main_frame.pack(expand=True, fill='both', padx=20, pady=20)
+        self.main_frame = tk.Frame(self, bg=DEFAULTBACKGROUND)
+        self.main_frame.pack(expand=True, fill='both', padx=20, pady=20)
+
 
         if sys.platform == 'darwin':  # macOS
             self.bind("<Command-s>", lambda event: self.save_file(event=event) )
@@ -106,11 +103,11 @@ class TabsPage(tk.Frame):
             self.bind("<Control-s>", lambda event: self.save_file(event=event) )
             
         # Set up grid weights for responsive resizing
-        main_frame.grid_rowconfigure(0, weight=1)
-        main_frame.grid_columnconfigure(0, weight=1)
+        self.main_frame.grid_rowconfigure(0, weight=1)
+        self.main_frame.grid_columnconfigure(0, weight=1)
     
         # Variables for operations
-        self.frames = self.build_AccumulatorView(main_frame)
+        self.frames = self.build_AccumulatorView(self.main_frame)
         self.UVsim = UVSimulator()
         self.full_file_path = None
         self.file_path = None
@@ -118,7 +115,13 @@ class TabsPage(tk.Frame):
 
         # Raise the AccumulatorView
         self.show_frame(AccumulatorView)
-        
+
+    def update_color(self):
+        """ Update the GUI with the new background color """
+        self.config(bg=DEFAULTBACKGROUND)
+        self.main_frame.config(bg=DEFAULTBACKGROUND)
+        self.frames[AccumulatorView].update_primary_color()
+
     def on_resize(self, event):
         # Display the current size of the window in the label
         self.label.config(text=f"Window size: {self.winfo_width()}x{self.winfo_height()}")
@@ -185,7 +188,7 @@ class TabsPage(tk.Frame):
 class AccumulatorView(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-
+        self.parent = parent
         # Set up grid weights for responsive resizing
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure([0,1], weight=1)
@@ -195,37 +198,37 @@ class AccumulatorView(tk.Frame):
         self.IO_label.grid(row=0, column=0, padx=10, pady=10, columnspan=2)
 
         # Frames for file loading and IO operations
-        file_frame = tk.Frame(self, bg=CUSTOMCOLOR, bd=2, relief='ridge')
-        file_frame.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
-        file_frame.config(bg=CUSTOMCOLOR)
+        self.file_frame = tk.Frame(self, bg=CUSTOMCOLOR, bd=2, relief='ridge')
+        self.file_frame.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
+        self.file_frame.config(bg=CUSTOMCOLOR)
 
-        io_frame = tk.Frame(self, bg=CUSTOMCOLOR, bd=2, relief='ridge')
-        io_frame.grid(row=1, column=1, padx=10, pady=5, sticky="nsew")
-        io_frame.config(bg=CUSTOMCOLOR)
+        self.io_frame = tk.Frame(self, bg=CUSTOMCOLOR, bd=2, relief='ridge')
+        self.io_frame.grid(row=1, column=1, padx=10, pady=5, sticky="nsew")
+        self.io_frame.config(bg=CUSTOMCOLOR)
 
         # Set up grid weights for responsive resizing within frames
-        file_frame.grid_rowconfigure(0, weight=1)
-        file_frame.grid_columnconfigure(0, weight=1)
+        self.file_frame.grid_rowconfigure(0, weight=1)
+        self.file_frame.grid_columnconfigure(0, weight=1)
 
-        io_frame.grid_rowconfigure(0, weight=1)
-        io_frame.grid_columnconfigure(0, weight=1)
+        self.io_frame.grid_rowconfigure(0, weight=1)
+        self.io_frame.grid_columnconfigure(0, weight=1)
 
-        input_frame = tk.Frame(io_frame, bg=CUSTOMCOLOR, bd=2, relief='ridge')
-        input_frame.grid(row=0, column=0, padx=10, pady=5, sticky="nsew")
-        input_frame.config(bg="gray")
+        self.input_frame = tk.Frame(self.io_frame, bg=CUSTOMCOLOR, bd=2, relief='ridge')
+        self.input_frame.grid(row=0, column=0, padx=10, pady=5, sticky="nsew")
+        self.input_frame.config(bg="gray")
         # Set up grid weights for responsive resizing
-        input_frame.grid_rowconfigure(0, weight=1)
-        input_frame.grid_columnconfigure(0, weight=1)
+        self.input_frame.grid_rowconfigure(0, weight=1)
+        self.input_frame.grid_columnconfigure(0, weight=1)
 
-        output_frame = tk.Frame(io_frame, bg=CUSTOMCOLOR, bd=2, relief='ridge')
-        output_frame.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
-        output_frame.config(bg="gray")
+        self.output_frame = tk.Frame(self.io_frame, bg=CUSTOMCOLOR, bd=2, relief='ridge')
+        self.output_frame.grid(row=1, column=0, padx=10, pady=5, sticky="nsew")
+        self.output_frame.config(bg="gray")
         # Set up grid weights for responsive resizing
-        output_frame.grid_rowconfigure(0, weight=1)
-        output_frame.grid_columnconfigure(0, weight=1)
+        self.output_frame.grid_rowconfigure(0, weight=1)
+        self.output_frame.grid_columnconfigure(0, weight=1)
 
         # File manager inner frame on the left side
-        self.left_inner_frame = tk.Frame(file_frame, bg=CUSTOMCOLOR)
+        self.left_inner_frame = tk.Frame(self.file_frame, bg=CUSTOMCOLOR)
         self.left_inner_frame.grid(row=2, column=0, padx=10, pady=10)
         self.left_inner_frame.config(bg="gray")
         self.left_inner_frame.grid_rowconfigure(0, weight=1)
@@ -292,33 +295,44 @@ class AccumulatorView(tk.Frame):
         self.new_file_btn.grid(row=4, column=1, padx=10, pady=10, sticky="new")
 
         # Labels and widgets for IO operations section
-        self.IO_label = ttk.Label(input_frame, text="Input", font=LARGEFONT, background="gray")
+        self.IO_label = ttk.Label(self.input_frame, text="Input", font=LARGEFONT, background="gray")
         self.IO_label.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
 
-        self.input_entry = ttk.Entry(input_frame)
+        self.input_entry = ttk.Entry(self.input_frame)
         self.input_entry.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
 
-        self.send_btn= ttk.Button(input_frame, text="Resume Execution", command=lambda: self.send_input(controller))
+        self.send_btn= ttk.Button(self.input_frame, text="Resume Execution", command=lambda: self.send_input(controller))
         self.send_btn.grid(row=2, column=0, padx=10, pady=10, sticky="ew")
         self.send_btn.config(state="disabled") 
 
-        self.output_label = ttk.Label(output_frame, text="Output", font=LARGEFONT, justify="center")
+        self.output_label = ttk.Label(self.output_frame, text="Output", font=LARGEFONT, justify="center")
         self.output_label.grid(row=0, column=0, padx=10, pady=10, sticky="ew")
 
-        self.output_text = ttk.Label(output_frame, text="", font=SMALLFONT, wraplength=500)
+        self.output_text = ttk.Label(self.output_frame, text="", font=SMALLFONT, wraplength=500)
         self.output_text.grid(row=1, column=0, padx=10, pady=10, sticky="ew")
 
         # Bind the <Return> key event to the run_file function
         self.input_entry.bind("<Return>", lambda event: self.send_input(controller, event))
 
-    def on_resize(self, event):
-        # Display the current size of the window in the label
-        label.config(text=f"Window size: {event.width}x{event.height}")
-        # Adjust layout or other elements based on the size
-        if event.width < 400 or event.height < 200:
-            label.config(bg='red', fg='white')
-        else:
-            label.config(bg='green', fg='black')
+    def update_primary_color(self):
+        self.config(bg=DEFAULTBACKGROUND)
+        print(DEFAULTBACKGROUND)
+        self.input_frame.config(bg=CUSTOMCOLOR)
+        self.output_frame.config(bg=CUSTOMCOLOR)
+        self.left_inner_frame.config(bg=CUSTOMCOLOR)
+        self.table_frame.config(bg=CUSTOMCOLOR)
+        self.file_frame.config(bg=CUSTOMCOLOR)
+        self.io_frame.config(bg=CUSTOMCOLOR)
+
+
+    # def on_resize(self, event):
+    #     # Display the current size of the window in the label
+    #     label.config(text=f"Window size: {event.width}x{event.height}")
+    #     # Adjust layout or other elements based on the size
+    #     if event.width < 400 or event.height < 200:
+    #         label.config(bg='red', fg='white')
+    #     else:
+    #         label.config(bg='green', fg='black')
 
     def updateTreeView(self, controller:tkinterApp):
         if self.fileContents(controller=controller) or self.editor_entry.get("1.0", tk.END).strip() != "":
